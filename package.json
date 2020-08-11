@@ -24,6 +24,7 @@
     "chai-as-promised": "^7.1.1",
     "chai-http": "^4.3.0",
     "dirty-chai": "^2.0.1",
+    "express": "^4.17.1",
     "mocha": "^6.1.4",
     "sinon": "^7.5.0",
     "snazzy": "^8.0.0",
