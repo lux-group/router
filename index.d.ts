@@ -51,7 +51,7 @@ declare module "@luxuryescapes/router" {
       body?: object;
     };
     responses?: {
-      [index: int]: object;
+      [index: number]: object;
     }
   }
 
@@ -85,16 +85,16 @@ declare module "@luxuryescapes/router" {
   export function router(app: Express, config: RouterConfig): RouterAbstraction;
 
   interface HTTPError {
-    new (code: number, message: string, errors?: Array)
+    new (code: number, message: string, errors?: (string | object)[]) : HTTPError
     code: number
-    errors: Array
+    errors: (string | object)[]
     responseJson: object
   }
 
   interface InheritedHTTPError {
-    new (message: string, errors?: Array)
+    new (message: string, errors?: (string | object)[]) : HTTPError
     code: number
-    errors: Array
+    errors: (string | object)[]
     responseJson: object
   }
 
