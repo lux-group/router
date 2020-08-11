@@ -50,19 +50,19 @@ declare module "@luxuryescapes/router" {
       params?: object;
       body?: object;
     };
-    responses: {
+    responses?: {
       [index: int]: object;
     }
   }
 
   interface RouteOptions {
     url: string;
-    schema: RouteSchema;
-    isPublic: boolean;
+    schema?: RouteSchema;
+    isPublic?: boolean;
     handlers: Handler[];
-    tags: string[];
-    summary: string;
-    description: string;
+    tags?: string[];
+    summary?: string;
+    description?: string;
     warnOnRequestValidationError?: boolean;
   }
 
@@ -83,4 +83,31 @@ declare module "@luxuryescapes/router" {
   }
 
   export function router(app: Express, config: RouterConfig): RouterAbstraction;
+
+  interface HTTPError {
+    new (code: number, message: string, errors?: Array)
+    code: number
+    errors: Array
+    responseJson: object
+  }
+
+  interface InheritedHTTPError {
+    new (message: string, errors?: Array)
+    code: number
+    errors: Array
+    responseJson: object
+  }
+
+  interface errors {
+    HTTPError: HTTPError,
+    ForbiddenError: InheritedHTTPError,
+    UnauthorizedError: InheritedHTTPError,
+    InvalidRequestError: InheritedHTTPError,
+    NotFoundError: InheritedHTTPError,
+    ServerError: InheritedHTTPError,
+    ServiceUnavailableError: InheritedHTTPError,
+    UnprocessableEntityError: InheritedHTTPError
+  }
+
+  export const errors: errors
 }
