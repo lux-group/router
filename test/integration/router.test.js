@@ -414,7 +414,7 @@ describe('router', () => {
         produces: ['application/json'],
         schemes: ['https'],
         paths: {
-          '/api/something/:id': {
+          '/api/something/{id}': {
             put: {
               tags: ['Something'],
               summary: 'This route is about something',
