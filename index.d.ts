@@ -59,6 +59,7 @@ declare module "@luxuryescapes/router" {
     url: string;
     schema?: RouteSchema;
     isPublic?: boolean;
+    preHandlers?: Handeler[];
     handlers: Handler[];
     tags?: string[];
     summary?: string;
