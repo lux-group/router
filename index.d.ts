@@ -39,6 +39,7 @@ declare module "@luxuryescapes/router" {
       paths: object;
       securityDefinitions: object;
       definitions: object;
+      preHandlers?: Handler[];
     };
   }
 

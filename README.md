@@ -56,7 +56,8 @@ const swaggerBaseProperties = {
   ],
   paths: {},
   securityDefinitions: {},
-  definitions: {}
+  definitions: {},
+  preHandlers: [checkValidToken, requireAdmin] // Add these to require auth
 }
 
 const routerInstance = router(server, {
@@ -156,6 +157,7 @@ NOTE: Only a limited amount of http error codes have been mapped so far, if the 
 
 Use `serveSwagger` to define the endpoint you wish to serve your docs at
 This will serve a swagger ui html page, with the swagger definition that is generated from your routes
+You can optionally pass middleware via the swagger config `preHandlers` e.g. to secure access to swagger
 
 If you want the raw swagger json definition you can use `toSwagger`
 
