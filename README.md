@@ -57,7 +57,7 @@ const swaggerBaseProperties = {
   paths: {},
   securityDefinitions: {},
   definitions: {},
-  preHandlers: [checkValidToken, requireAdmin] // Add these to require auth
+  preHandlers: [checkValidToken, requireAdmin] // pre handlers are run before your handlers, for example: you could use this to add authentication
 }
 
 const routerInstance = router(server, {
