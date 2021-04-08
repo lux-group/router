@@ -86,7 +86,7 @@ declare module "@luxuryescapes/router" {
 
   export function router(app: Express, config: RouterConfig): RouterAbstraction;
 
-  interface HTTPError {
+  interface HTTPError extends Error {
     new (code: number, message: string, errors?: (string | object)[]) : HTTPError
     code: number
     errors: (string | object)[]
