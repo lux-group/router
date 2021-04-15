@@ -1,11 +1,11 @@
 declare module "@luxuryescapes/router" {
-  import { Request, Response, Express } from "express";
+  import { Request, Response, Express, NextFunction, Handler } from "express";
 
   export function errorHandler(
     err: Error,
     req: Request,
     res: Response,
-    next: Function
+    next: NextFunction
   ): void;
 
   interface Logger {
@@ -42,8 +42,6 @@ declare module "@luxuryescapes/router" {
       preHandlers?: Handler[];
     };
   }
-
-  type Handler = (req: Request, res: Response, next?: Function) => Promise<void>;
 
   interface RouteSchema {
     request?: {
