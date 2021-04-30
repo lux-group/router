@@ -1,5 +1,5 @@
 declare module "@luxuryescapes/router" {
-  import { Request, Response, Express, NextFunction, Handler } from "express";
+  import { Request, Response, Express, NextFunction, Handler, RequestHandler } from "express";
 
   export function errorHandler(
     err: Error,
@@ -56,10 +56,11 @@ declare module "@luxuryescapes/router" {
 
   interface RouteOptions {
     url: string;
+    operationId?: string;
     schema?: RouteSchema;
     isPublic?: boolean;
     preHandlers?: Handler[];
-    handlers: Handler[];
+    handlers: RequestHandler<any, any, any, any>[];
     tags?: string[];
     summary?: string;
     description?: string;
@@ -71,6 +72,8 @@ declare module "@luxuryescapes/router" {
     schema: object;
   }
 
+  type OpenAPISpec = Record<string, any>;
+
   export interface RouterAbstraction {
     serveSwagger: (path: string) => void;
     app: Express,
@@ -80,6 +83,7 @@ declare module "@luxuryescapes/router" {
     delete: (options: RouteOptions) => void;
     patch: (options: RouteOptions) => void;
     schema: (options: SchemaRouteOptions) => void;
+    toSwagger: () => OpenAPISpec;
   }
 
   export function router(app: Express, config: RouterConfig): RouterAbstraction;
