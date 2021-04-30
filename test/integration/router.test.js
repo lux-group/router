@@ -285,6 +285,22 @@ describe('router', () => {
         expect(response.body).to.eql({ id: 123 })
       })
     })
+
+    describe('when an operationId is given', () => {
+      beforeEach(() => setupRoutes({ routeOpts: { operationId: "updateSomething" } }));
+
+      it('sets the operationId', () => {
+        expect(routerInstance.toSwagger().paths["/api/something/{id}"]["put"]["operationId"]).to.eql("updateSomething")
+      });
+    })
+
+    describe('when an operationId is not given', () => {
+      beforeEach(() => setupRoutes());
+
+      it('generates an operationId', () => {
+        expect(routerInstance.toSwagger().paths["/api/something/{id}"]["put"]["operationId"]).to.eql("/api/something/{id}/put")
+      });
+    })
   })
 
   describe('response validation', () => {
@@ -417,6 +433,7 @@ describe('router', () => {
           '/api/something/{id}': {
             put: {
               tags: ['Something'],
+              operationId: "/api/something/{id}/put",
               summary: 'This route is about something',
               description: 'This route does something',
               responses: {
