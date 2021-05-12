@@ -46,7 +46,7 @@ const schema = {
       world: s.string({ min: 2, max: 4 })
     }),
     params: s.objectWithOnly({
-      id: s.integer({ parse: true })
+      id: s.integer({ parse: true, coerce: false })
     }),
     body: s.objectWithOnly({
       action: s.enum({ values: ['create', 'update'], verbose: true, description: 'The action you want to perform' })
@@ -197,11 +197,8 @@ describe('router', () => {
 
   describe('request validation', () => {
     describe('when enabled', () => {
-      beforeEach(async () => {
-        return setupRoutes()
-      })
-
       it('should return if request is valid', async () => {
+        await setupRoutes();
         const response = await chai.request(app).put('/api/something/123')
           .query({ hello: 'hi', world: 'yes' })
           .send({
@@ -212,7 +209,32 @@ describe('router', () => {
         expect(response.body).to.eql({ id: 123 })
       })
 
+      it('coerces fields by default', async () => {
+        await setupRoutes({
+          routeOpts: {
+            schema: {
+              request: {
+                params: s.objectWithOnly({ id: s.integer({ parse: true })})
+              }
+            }
+          },
+          handler: (req, res) => {
+            res.json(req.params)
+          }
+        });
+
+        const response = await chai.request(app).put('/api/something/123')
+          .query({ hello: 'hi', world: 'yes' })
+          .send({
+            action: 'create'
+          })
+
+        expect(response.status).to.eql(200)
+        expect(response.body).to.eql({ id: 123 })
+      })
+
       it('should error if query params are invalid', async () => {
+        await setupRoutes();
         const response = await chai.request(app).put('/api/something/123')
           .query({ world: 'yes' })
           .send({
@@ -231,6 +253,7 @@ describe('router', () => {
       })
 
       it('should error if params are invalid', async () => {
+        await setupRoutes();
         const response = await chai.request(app).put('/api/something/myid123')
           .query({ hello: 'hi', world: 'yes' })
           .send({
@@ -250,6 +273,7 @@ describe('router', () => {
       })
 
       it('should error if payload is invalid', async () => {
+        await setupRoutes();
         const response = await chai.request(app).put('/api/something/123')
           .query({ hello: 'hi', world: 'yes' })
           .send({
