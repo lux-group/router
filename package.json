@@ -1,6 +1,6 @@
 {
   "name": "@luxuryescapes/router",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Wrapper around express router that provides validation and documentation out of the box",
   "main": "index.js",
   "types": "index.d.ts",
