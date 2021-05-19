@@ -43,7 +43,8 @@ const schema = {
   request: {
     query: s.objectWithOnly({
       hello: s.enum({ type: 'string', values: ['hi', 'hello'], verbose: true, description: 'Different ways to greet someone' }),
-      world: s.string({ min: 2, max: 4 })
+      world: s.string({ min: 2, max: 4 }),
+      foo: s.array({ of: s.string(), optional: true })
     }),
     params: s.objectWithOnly({
       id: s.integer({ parse: true })
@@ -458,6 +459,7 @@ describe('router', () => {
                   enum: ['hi', 'hello']
                 },
                 { name: 'world', in: 'query', required: true, type: 'string' },
+                { name: 'foo', in: 'query', required: false, type: 'array', items: { 'type': 'string' } },
                 {
                   name: 'payload',
                   in: 'body',
