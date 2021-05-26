@@ -78,6 +78,8 @@ declare module "@luxuryescapes/router" {
     summary?: string;
     description?: string;
     warnOnRequestValidationError?: boolean;
+    mutateParams?: boolean;
+    mutateQuery?: boolean;
   }
 
   interface Schema {
