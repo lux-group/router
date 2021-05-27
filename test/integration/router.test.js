@@ -199,7 +199,7 @@ describe('router', () => {
   describe('request validation', () => {
     describe('when enabled', () => {
       it('should return if request is valid', async () => {
-        await setupRoutes();
+        await setupRoutes()
         const response = await chai.request(app).put('/api/something/123')
           .query({ hello: 'hi', world: 'yes' })
           .send({
@@ -218,12 +218,12 @@ describe('router', () => {
                 params: s.objectWithOnly({ id: s.integer({ parse: true }) })
               }
             },
-            mutateParams: true,
+            mutateParams: true
           },
           handler: (req, res) => {
             res.json(req.params)
           }
-        });
+        })
 
         const response = await chai.request(app).put('/api/something/123')
           .query({ hello: 'hi', world: 'yes' })
@@ -236,7 +236,7 @@ describe('router', () => {
       })
 
       it('should error if query params are invalid', async () => {
-        await setupRoutes();
+        await setupRoutes()
         const response = await chai.request(app).put('/api/something/123')
           .query({ world: 'yes' })
           .send({
@@ -255,7 +255,7 @@ describe('router', () => {
       })
 
       it('should error if params are invalid', async () => {
-        await setupRoutes();
+        await setupRoutes()
         const response = await chai.request(app).put('/api/something/myid123')
           .query({ hello: 'hi', world: 'yes' })
           .send({
@@ -275,7 +275,7 @@ describe('router', () => {
       })
 
       it('should error if payload is invalid', async () => {
-        await setupRoutes();
+        await setupRoutes()
         const response = await chai.request(app).put('/api/something/123')
           .query({ hello: 'hi', world: 'yes' })
           .send({
