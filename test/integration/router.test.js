@@ -47,7 +47,7 @@ const schema = {
       foo: s.array({ of: s.string(), optional: true })
     }),
     params: s.objectWithOnly({
-      id: s.integer({ parse: true, coerce: false })
+      id: s.integer({ parse: true })
     }),
     body: s.objectWithOnly({
       action: s.enum({ values: ['create', 'update'], verbose: true, description: 'The action you want to perform' })
@@ -210,14 +210,15 @@ describe('router', () => {
         expect(response.body).to.eql({ id: 123 })
       })
 
-      it('coerces fields by default', async () => {
+      it('coerces fields when mutateParams is on', async () => {
         await setupRoutes({
           routeOpts: {
             schema: {
               request: {
-                params: s.objectWithOnly({ id: s.integer({ parse: true })})
+                params: s.objectWithOnly({ id: s.integer({ parse: true }) })
               }
-            }
+            },
+            mutateParams: true,
           },
           handler: (req, res) => {
             res.json(req.params)
