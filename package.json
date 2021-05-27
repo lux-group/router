@@ -28,14 +28,14 @@
     "mocha": "^6.1.4",
     "sinon": "^7.5.0",
     "snazzy": "^8.0.0",
-    "standard": "^12.0.1"
+    "standard": "^12.0.1",
+    "strummer": "lux-group/strummer#coerce"
   },
   "peerDependencies": {
     "express": "^4.17.1"
   },
   "dependencies": {
     "openapi-typescript": "^3.2.3",
-    "strummer": "lux-group/strummer#coerce",
     "swagger-ui-express": "^4.0.6",
     "uuid": "^3.3.3"
   },
