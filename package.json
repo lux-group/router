@@ -29,7 +29,7 @@
     "sinon": "^7.5.0",
     "snazzy": "^8.0.0",
     "standard": "^12.0.1",
-    "strummer": "lux-group/strummer#coerce"
+    "strummer": "lux-group/strummer"
   },
   "peerDependencies": {
     "express": "^4.17.1"

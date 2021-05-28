@@ -2156,9 +2156,9 @@ strip-json-comments@2.0.1, strip-json-comments@^2.0.1:
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
   integrity sha1-PFMZQukIwml8DsNEhYwobHygpgo=
 
-strummer@lux-group/strummer#coerce:
+strummer@lux-group/strummer:
   version "2.10.0"
-  resolved "https://codeload.github.com/lux-group/strummer/tar.gz/656490feabfa37b2d4d88fdbf75febd82e665522"
+  resolved "https://codeload.github.com/lux-group/strummer/tar.gz/7e3eeed365735dcc9535fe5427394bf19392ad41"
   dependencies:
     escape-string-regexp "^4.0.0"
     isarray "^2.0.2"
