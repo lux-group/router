@@ -163,7 +163,7 @@ If you want the raw swagger json definition you can use `toSwagger`
 
 ## TypeScript
 
-If you use Strummer schemas to validate your endpoints, you can use the following steps to generate
+If you use Strummer schemas to validate your endpoints, you can use the following steps to auto-generate
 TypeScript types.
 
 ## Create a helper file in your project
