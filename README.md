@@ -161,8 +161,42 @@ You can optionally pass middleware via the swagger config `preHandlers` e.g. to 
 
 If you want the raw swagger json definition you can use `toSwagger`
 
+## TypeScript
+
+If you use Strummer schemas to validate your endpoints, you can use the following steps to auto-generate
+TypeScript types.
+
+## Create a helper file in your project
+
+```
+import { generateTypes } from "@luxuryescapes/router";
+import { mount } from "../routes";
+
+generateTypes(mount, "./src/contract");
+
+process.exit(0);
+```
+
+`mount` is a function that takes an Express server and returns a RouterAbstraction. In short, it's a function that uses @luxuryescapes/router to set up your endpoints.
+
+## Add a script to your package.json
+
+```
+{
+  "scripts": {
+    "generate-types": "./src/scripts/generate-types.ts"
+  }
+}
+```
+
+Where the path is to the file you just created.
+
+## Profit
+
+Now, anytime you run `yarn generate-types` the types will be regenerated for you to use in your controllers. 
+
 ## Contributing
 
 Make your change, make a PR
 
-* `npm test`
+* `yarn test`

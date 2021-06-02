@@ -34,6 +34,9 @@
   "peerDependencies": {
     "express": "^4.17.1"
   },
+  "optionalDependencies": {
+    "openapi-typescript": "^3.3.1"
+  },
   "dependencies": {
     "swagger-ui-express": "^4.0.6",
     "uuid": "^3.3.3"

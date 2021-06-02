@@ -8,6 +8,11 @@ declare module "@luxuryescapes/router" {
     next: NextFunction
   ): void;
 
+  export function generateTypes(
+    mount: (server: Express) => RouterAbstraction,
+    path: string
+  ): void;
+
   interface Logger {
     log: Function;
     warn: Function;
