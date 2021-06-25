@@ -38,6 +38,7 @@
     "openapi-typescript": "^3.3.1"
   },
   "dependencies": {
+    "@sentry/node": "^6.7.2",
     "swagger-ui-express": "^4.0.6",
     "uuid": "^3.3.3"
   },
