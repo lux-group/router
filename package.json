@@ -32,13 +32,13 @@
     "strummer": "^2.8.0"
   },
   "peerDependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "@sentry/node": "^6.7.2"
   },
   "optionalDependencies": {
     "openapi-typescript": "^3.3.1"
   },
   "dependencies": {
-    "@sentry/node": "^6.7.2",
     "swagger-ui-express": "^4.0.6",
     "uuid": "^3.3.3"
   },
