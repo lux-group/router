@@ -22,8 +22,10 @@ declare module "@luxuryescapes/router" {
   interface RouterConfig {
     validateResponses?: boolean;
     logRequests?: boolean;
-    correlationIdExtractor?: Function;
+    correlationIdExtractor?: (req: Request, res: Response) => string;
     logger?: Logger;
+    sentryDSN?: string;
+    appEnv: 'development' | 'spec' | 'test' | 'production';
     swaggerBaseProperties?: {
       swagger: string;
       info: {
@@ -89,6 +91,7 @@ declare module "@luxuryescapes/router" {
     patch: (options: RouteOptions) => void;
     schema: (options: SchemaRouteOptions) => void;
     toSwagger: () => OpenAPISpec;
+    useErrorHandler: () => void;
   }
 
   export function router(app: Express, config: RouterConfig): RouterAbstraction;
