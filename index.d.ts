@@ -14,9 +14,17 @@ declare module "@luxuryescapes/router" {
   ): void;
 
   interface Logger {
+    debug: Function;
     log: Function;
     warn: Function;
     error: Function;
+  }
+
+  type AppEnv = 'development' | 'spec' | 'test' | 'production';
+
+  interface SentryConfig {
+    appEnv: AppEnv;
+    logger?: Logger;
   }
 
   interface RouterConfig {
@@ -25,7 +33,7 @@ declare module "@luxuryescapes/router" {
     correlationIdExtractor?: (req: Request, res: Response) => string;
     logger?: Logger;
     sentryDSN?: string;
-    appEnv: 'development' | 'spec' | 'test' | 'production';
+    appEnv?: AppEnv;
     swaggerBaseProperties?: {
       swagger: string;
       info: {
@@ -95,6 +103,7 @@ declare module "@luxuryescapes/router" {
   }
 
   export function router(app: Express, config: RouterConfig): RouterAbstraction;
+  export function initializeSentry(config: SentryConfig): boolean;
 
   interface HTTPError extends Error {
     new (code: number, message: string, errors?: (string | object)[]) : HTTPError
