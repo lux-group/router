@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "swagger-ui-express": "^4.0.6",
-    "uuid": "^8.3.2"
+    "uuid": "^3.3.3"
   },
   "standard": {
     "globals": [
