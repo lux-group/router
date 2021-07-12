@@ -161,6 +161,10 @@ Use `serveSwagger` to define the endpoint you wish to serve your docs at
 This will serve a swagger ui html page, with the swagger definition that is generated from your routes
 You can optionally pass middleware via the swagger config `preHandlers` e.g. to secure access to swagger
 
+The raw json is also served
+if you defined your docs endpoint as `routerInstance.serveSwagger('/docs')`
+You can access the raw json at `/docs/swagger.json`
+
 If you want the raw swagger json definition you can use `toSwagger`
 
 ## TypeScript
@@ -195,7 +199,7 @@ Where the path is to the file you just created.
 
 ## Profit
 
-Now, anytime you run `yarn generate-types` the types will be regenerated for you to use in your controllers. 
+Now, anytime you run `yarn generate-types` the types will be regenerated for you to use in your controllers.
 
 ## Contributing
 
