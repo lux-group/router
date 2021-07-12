@@ -133,7 +133,7 @@ describe('router', () => {
     describe('when disabled', () => {
       let logger
       beforeEach(async () => {
-        logger = { log: sinon.stub() }
+        logger = { log: sinon.stub(), warn: sinon.stub() }
         return setupRoutes({ opts: { logRequests: false, logger } })
       })
 
