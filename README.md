@@ -16,6 +16,14 @@ Opinionated wrapper around express, which adds in validation via [strummer](http
 
 ```
 npm install @luxuryescapes/router
+npm install @sentry/node # optional for Sentry support
+```
+
+or
+
+```
+yarn add @luxuryescapes/router
+yarn add @sentry/node # optional for Sentry support
 ```
 
 ```js
@@ -109,6 +117,13 @@ routerInstance.serveSwagger('/docs')
 routerInstance.useErrorHandler()
 server.listen()
 ```
+
+# Sentry Support
+
+To automatically send unhandled exceptions to Sentry, two steps are required:
+
+1. Install @sentry/node in to your application using npm or yarn.
+2. Pass `sentryDSN` and `appEnv` when building the router (shown above).
 
 ## Writing controllers
 
