@@ -1,6 +1,6 @@
 {
   "name": "@luxuryescapes/router",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Wrapper around express router that provides validation and documentation out of the box",
   "main": "index.js",
   "types": "index.d.ts",
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/brandsExclusive/router#readme",
   "devDependencies": {
+    "@sentry/node": "^6.8.0",
     "body-parser": "^1.19.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
@@ -26,6 +27,7 @@
     "dirty-chai": "^2.0.1",
     "express": "^4.17.1",
     "mocha": "^6.1.4",
+    "openapi-typescript": "^4.0.2",
     "sinon": "^7.5.0",
     "snazzy": "^8.0.0",
     "standard": "^12.0.1",
@@ -33,9 +35,6 @@
   },
   "peerDependencies": {
     "express": "^4.17.1"
-  },
-  "optionalDependencies": {
-    "openapi-typescript": "^3.3.1"
   },
   "dependencies": {
     "swagger-ui-express": "^4.0.6",

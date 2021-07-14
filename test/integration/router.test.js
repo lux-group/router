@@ -133,7 +133,7 @@ describe('router', () => {
     describe('when disabled', () => {
       let logger
       beforeEach(async () => {
-        logger = { log: sinon.stub() }
+        logger = { log: sinon.stub(), warn: sinon.stub() }
         return setupRoutes({ opts: { logRequests: false, logger } })
       })
 
@@ -152,7 +152,7 @@ describe('router', () => {
     describe('when enabled', () => {
       let logger
       beforeEach(async () => {
-        logger = { log: sinon.stub() }
+        logger = { log: sinon.stub(), warn: sinon.stub() }
         sinon.stub(uuid, 'get').returns('stubbeduuid')
         return setupRoutes({ opts: { logRequests: true, logger } })
       })
@@ -178,7 +178,7 @@ describe('router', () => {
     describe('when using correlationIdExtractor', () => {
       let logger
       beforeEach(async () => {
-        logger = { log: sinon.stub() }
+        logger = { log: sinon.stub(), warn: sinon.stub() }
         return setupRoutes({ opts: { logRequests: true, logger, correlationIdExtractor: (req, res) => req.params.id } })
       })
 

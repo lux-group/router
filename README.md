@@ -16,13 +16,21 @@ Opinionated wrapper around express, which adds in validation via [strummer](http
 
 ```
 npm install @luxuryescapes/router
+npm install @sentry/node # optional for Sentry support
+```
+
+or
+
+```
+yarn add @luxuryescapes/router
+yarn add @sentry/node # optional for Sentry support
 ```
 
 ```js
 const express = require('express')
 const bodyParser = require('body-parser')
 const s = require('strummer')
-const { router, errorHandler } = require('@luxuryescapes/router')
+const { router } = require('@luxuryescapes/router')
 
 const server = express()
 server.use(bodyParser.json())
@@ -62,7 +70,9 @@ const swaggerBaseProperties = {
 
 const routerInstance = router(server, {
   validateResponses: true, // false = responses not validated,true = all responses matching the defined status codes in the schema will be validated and an error throw, DEFAULT: false
-  swaggerBaseProperties // the base properties to include in the swagger definition
+  swaggerBaseProperties, // the base properties to include in the swagger definition
+  sentryDSN: 'FIND_ME_IN_SENTRY', // optional, provide if you want to auto-report unhandled exceptions to Sentry
+  appEnv: process.ENV.APP_ENV, // optional, used to specify the env in Sentry, defaults to "unknown"
 })
 
 // define routes
@@ -104,9 +114,16 @@ routerInstance.put({
 routerInstance.serveSwagger('/docs')
 
 // you don't have to use our error handler if you want a custom one
-server.use(errorHandler)
+routerInstance.useErrorHandler()
 server.listen()
 ```
+
+# Sentry Support
+
+To automatically send unhandled exceptions to Sentry, two steps are required:
+
+1. Install @sentry/node in to your application using npm or yarn.
+2. Pass `sentryDSN` and `appEnv` when building the router (shown above).
 
 ## Writing controllers
 
