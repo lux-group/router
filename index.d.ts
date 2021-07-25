@@ -11,7 +11,7 @@ declare module "@luxuryescapes/router" {
   export function generateTypes(
     mount: (server: Express) => RouterAbstraction,
     path: string
-  ): void;
+  ): Promise<void>;
 
   interface Logger {
     debug: Function;
