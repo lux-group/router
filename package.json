@@ -1,6 +1,6 @@
 {
   "name": "@luxuryescapes/router",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Wrapper around express router that provides validation and documentation out of the box",
   "main": "index.js",
   "types": "index.d.ts",
@@ -26,7 +26,7 @@
     "chai-http": "^4.3.0",
     "dirty-chai": "^2.0.1",
     "express": "^4.17.1",
-    "mocha": "^6.1.4",
+    "mocha": "^9.0.2",
     "openapi-typescript": "^4.0.2",
     "sinon": "^7.5.0",
     "snazzy": "^8.0.0",
