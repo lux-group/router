@@ -1,8 +1,13 @@
 version: 2
+
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+    - image: circleci/node:14.17.3
+
 jobs:
   build:
-    docker:
-      - image: circleci/node:10.16.0
+    <<: *defaults
     steps:
       - checkout
 
@@ -21,8 +26,31 @@ jobs:
       - run: npm test
       - run: npm run lint
 
+  publish:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Publish package
+          command: npm publish
+
 experimental:
   notify:
     branches:
       only:
         - master
+
+workflows:
+  version: 2
+  build-publish:
+    jobs:
+      - build:
+          context: LE
+      - publish:
+          context: LE
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
