@@ -124,6 +124,7 @@ To automatically send unhandled exceptions to Sentry, two steps are required:
 
 1. Install @sentry/node in to your application using npm or yarn.
 2. Pass `sentryDSN` and `appEnv` when building the router (shown above).
+3. Use the provided error handler `useErrorHandler`, or create your own that calls Sentry's `handleErrors` function. Make sure to put this after you've defined your routes.
 
 ## Writing controllers
 
