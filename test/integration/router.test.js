@@ -1,7 +1,6 @@
 const chai = require('chai')
 const sinon = require('sinon')
 const express = require('express')
-const bodyParser = require('body-parser')
 const s = require('strummer')
 
 const expect = chai.expect
@@ -67,7 +66,6 @@ describe('router', () => {
 
   beforeEach(async () => {
     server = express()
-    server.use(bodyParser.json())
   })
 
   afterEach(async () => {
