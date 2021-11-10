@@ -106,7 +106,7 @@ routerInstance.put({
   logRequests: true, // true = request and response will be logged DEFAULT: false,
   correlationIdExtractor: (req, res) => { return req.params.id }, // for use when logRequests is TRUE, this will be used to extract the correlationid from the request/response for use in the log output DEFAULT: null
   logger: new Bunyan(), // you can pass in a logger that will be used for logging output , must have methods `log`, `warn` and `error` DEFAULT: console
-  jsonLimit: '20mb', // Controls the maximum request body size. If this is a number, then the value specifies the number of bytes; if it is a string, the value is passed to the bytes library for parsing.
+  jsonOptions: { limit: '20mb' }, // Options to be passed to express.json() DEFAULT: {}
 })
 
 // this is the endpoint that the swagger ui will be served on
