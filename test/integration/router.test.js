@@ -97,7 +97,7 @@ describe('router', () => {
     })
     routerInstance.post({
       url: '/api/echo',
-      handlers: [echoHandler],
+      handlers: [echoHandler]
     })
     routerInstance.serveSwagger('/docs')
     server.use(errorHandler)
@@ -142,11 +142,11 @@ describe('router', () => {
       const response = await chai.request(app)
         .post('/api/echo')
         .set('content-type', 'text/plain')
-        .send("ABC")
+        .send('ABC')
       expect(response.status).to.eql(200)
       expect(response.body).to.eql({ body: 'ABC' })
     })
-  });
+  })
 
   describe('request logging', () => {
     describe('when disabled', () => {
