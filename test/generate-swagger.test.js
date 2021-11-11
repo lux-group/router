@@ -198,23 +198,23 @@ describe('generateSwagger', () => {
       id: s.uuid(),
       opt: s.optional(
         s.oneOf([
-          s.enum({ values: ["hotel_only", "hotel_package"], type: "string" }),
+          s.enum({ values: ['hotel_only', 'hotel_package'], type: 'string' }),
           s.array({
             of: s.enum({
-              values: ["hotel_only", "hotel_package"],
-              type: "string",
-            }),
-          }),
+              values: ['hotel_only', 'hotel_package'],
+              type: 'string'
+            })
+          })
         ])
       ),
       req: s.oneOf([
-        s.enum({ values: ["hotel_only", "hotel_package"], type: "string" }),
+        s.enum({ values: ['hotel_only', 'hotel_package'], type: 'string' }),
         s.array({
           of: s.enum({
-            values: ["hotel_only", "hotel_package"],
-            type: "string",
-          }),
-        }),
+            values: ['hotel_only', 'hotel_package'],
+            type: 'string'
+          })
+        })
       ])
     }))
 
@@ -230,68 +230,68 @@ describe('generateSwagger', () => {
     )
 
     expect(swagger.definitions).to.eql({
-      "rate": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
+      'rate': {
+        'type': 'object',
+        'properties': {
+          'id': {
+            'type': 'string',
+            'format': 'uuid'
           },
-          "opt": {
-            "oneOf": [
+          'opt': {
+            'oneOf': [
               {
-                "enum": [
-                  "hotel_only",
-                  "hotel_package"
+                'enum': [
+                  'hotel_only',
+                  'hotel_package'
                 ],
-                "type": "string"
+                'type': 'string'
               },
               {
-                "type": "array",
-                "items": {
-                  "enum": [
-                    "hotel_only",
-                    "hotel_package"
+                'type': 'array',
+                'items': {
+                  'enum': [
+                    'hotel_only',
+                    'hotel_package'
                   ],
-                  "type": "string"
+                  'type': 'string'
                 }
               }
             ]
           },
-          "req": {
-            "oneOf": [
+          'req': {
+            'oneOf': [
               {
-                "enum": [
-                  "hotel_only",
-                  "hotel_package"
+                'enum': [
+                  'hotel_only',
+                  'hotel_package'
                 ],
-                "type": "string"
+                'type': 'string'
               },
               {
-                "type": "array",
-                "items": {
-                  "enum": [
-                    "hotel_only",
-                    "hotel_package"
+                'type': 'array',
+                'items': {
+                  'enum': [
+                    'hotel_only',
+                    'hotel_package'
                   ],
-                  "type": "string"
+                  'type': 'string'
                 }
               }
             ]
           }
         },
-        "required": [
-          "id",
-          "req"
+        'required': [
+          'id',
+          'req'
         ]
       }
     })
 
     expect(swagger.paths['/']['get']['responses']['200']).to.eql({
-      "schema": {
-        "$ref": "#/definitions/rate"
+      'schema': {
+        '$ref': '#/definitions/rate'
       },
-      "description": "200 response"
+      'description': '200 response'
     })
   })
 })

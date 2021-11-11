@@ -9,26 +9,26 @@ describe('generateTypes', () => {
       id: s.uuid(),
       opt: s.optional(
         s.oneOf([
-          s.enum({ values: ["hotel_only", "hotel_package"], type: "string" }),
+          s.enum({ values: ['hotel_only', 'hotel_package'], type: 'string' }),
           s.array({
             of: s.enum({
-              values: ["hotel_only", "hotel_package"],
-              type: "string",
-            }),
-          }),
+              values: ['hotel_only', 'hotel_package'],
+              type: 'string'
+            })
+          })
         ])
       ),
       req: s.oneOf([
-        s.enum({ values: ["hotel_only", "hotel_package"], type: "string" }),
+        s.enum({ values: ['hotel_only', 'hotel_package'], type: 'string' }),
         s.array({
           of: s.enum({
-            values: ["hotel_only", "hotel_package"],
-            type: "string",
-          }),
-        }),
+            values: ['hotel_only', 'hotel_package'],
+            type: 'string'
+          })
+        })
       ])
     }))
-  
+
     const swagger = generateSwagger(
       {
         get: {
@@ -38,7 +38,7 @@ describe('generateTypes', () => {
         }
       },
       {
-        swagger: "2.0",
+        swagger: '2.0'
       }
     )
     const output = await generateServerTypes(swagger)
