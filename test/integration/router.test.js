@@ -1,7 +1,6 @@
 const chai = require('chai')
 const sinon = require('sinon')
 const express = require('express')
-const bodyParser = require('body-parser')
 const s = require('strummer')
 
 const expect = chai.expect
@@ -67,7 +66,7 @@ describe('router', () => {
 
   beforeEach(async () => {
     server = express()
-    server.use(bodyParser.json())
+    server.use(express.text())
   })
 
   afterEach(async () => {
@@ -78,6 +77,10 @@ describe('router', () => {
     return res.status(201).json({
       id: parseInt(req.params.id)
     })
+  }
+
+  const echoHandler = (req, res) => {
+    res.status(200).json({ body: req.body })
   }
 
   const setupRoutes = async ({ handler, opts, routeOpts = {} } = {}) => {
@@ -91,6 +94,10 @@ describe('router', () => {
       summary: 'This route is about something',
       description: 'This route does something',
       ...routeOpts
+    })
+    routerInstance.post({
+      url: '/api/echo',
+      handlers: [echoHandler]
     })
     routerInstance.serveSwagger('/docs')
     server.use(errorHandler)
@@ -126,6 +133,18 @@ describe('router', () => {
 
       expect(response.status).to.eql(201)
       expect(response.body).to.eql({ id: 'abc' })
+    })
+  })
+
+  describe('non json requests', () => {
+    beforeEach(() => setupRoutes())
+    it('returns a successful response', async () => {
+      const response = await chai.request(app)
+        .post('/api/echo')
+        .set('content-type', 'text/plain')
+        .send('ABC')
+      expect(response.status).to.eql(200)
+      expect(response.body).to.eql({ body: 'ABC' })
     })
   })
 
