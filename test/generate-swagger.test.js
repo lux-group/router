@@ -192,4 +192,106 @@ describe('generateSwagger', () => {
       }
     })
   })
+
+  it('creates definitions for deep options', () => {
+    const rateSchema = s('rate', s.object({
+      id: s.uuid(),
+      opt: s.optional(
+        s.oneOf([
+          s.enum({ values: ['hotel_only', 'hotel_package'], type: 'string' }),
+          s.array({
+            of: s.enum({
+              values: ['hotel_only', 'hotel_package'],
+              type: 'string'
+            })
+          })
+        ])
+      ),
+      req: s.oneOf([
+        s.enum({ values: ['hotel_only', 'hotel_package'], type: 'string' }),
+        s.array({
+          of: s.enum({
+            values: ['hotel_only', 'hotel_package'],
+            type: 'string'
+          })
+        })
+      ])
+    }))
+
+    const swagger = generateSwagger(
+      {
+        get: {
+          '/': {
+            schema: { request: {}, responses: { 200: rateSchema } }
+          }
+        }
+      },
+      {}
+    )
+
+    expect(swagger.definitions).to.eql({
+      'rate': {
+        'type': 'object',
+        'properties': {
+          'id': {
+            'type': 'string',
+            'format': 'uuid'
+          },
+          'opt': {
+            'oneOf': [
+              {
+                'enum': [
+                  'hotel_only',
+                  'hotel_package'
+                ],
+                'type': 'string'
+              },
+              {
+                'type': 'array',
+                'items': {
+                  'enum': [
+                    'hotel_only',
+                    'hotel_package'
+                  ],
+                  'type': 'string'
+                }
+              }
+            ]
+          },
+          'req': {
+            'oneOf': [
+              {
+                'enum': [
+                  'hotel_only',
+                  'hotel_package'
+                ],
+                'type': 'string'
+              },
+              {
+                'type': 'array',
+                'items': {
+                  'enum': [
+                    'hotel_only',
+                    'hotel_package'
+                  ],
+                  'type': 'string'
+                }
+              }
+            ]
+          }
+        },
+        'required': [
+          'id',
+          'req'
+        ]
+      }
+    })
+
+    expect(swagger.paths['/']['get']['responses']['200']).to.eql({
+      'schema': {
+        '$ref': '#/definitions/rate'
+      },
+      'description': '200 response'
+    })
+  })
 })
