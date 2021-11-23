@@ -29,7 +29,7 @@ yarn add @sentry/node # optional for Sentry support
 ```js
 const express = require('express')
 const s = require('strummer')
-const { router } = require('@luxuryescapes/router')
+const { router, initializeSentry } = require('@luxuryescapes/router')
 
 const server = express()
 
@@ -65,6 +65,12 @@ const swaggerBaseProperties = {
   definitions: {},
   preHandlers: [checkValidToken, requireAdmin] // pre handlers are run before your handlers, for example: you could use this to add authentication
 }
+
+// optional, provide if you want to auto-report unhandled exceptions to Sentry
+initializeSentry({
+  appEnv: 'test',
+  sentryDSN: 'FIND_ME_IN_SENTRY'
+})
 
 const routerInstance = router(server, {
   validateResponses: true, // false = responses not validated,true = all responses matching the defined status codes in the schema will be validated and an error throw, DEFAULT: false

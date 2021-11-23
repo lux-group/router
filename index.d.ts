@@ -20,10 +20,11 @@ declare module "@luxuryescapes/router" {
     error: Function;
   }
 
-  type AppEnv = 'development' | 'spec' | 'test' | 'production';
+  export type AppEnv = 'development' | 'spec' | 'test' | 'production';
 
   interface SentryConfig {
     appEnv: AppEnv;
+    sentryDSN?: string;
     logger?: Logger;
   }
 
@@ -32,7 +33,6 @@ declare module "@luxuryescapes/router" {
     logRequests?: boolean;
     correlationIdExtractor?: (req: Request, res: Response) => string;
     logger?: Logger;
-    sentryDSN?: string;
     appEnv?: AppEnv;
     swaggerBaseProperties?: {
       swagger: string;
