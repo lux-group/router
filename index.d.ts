@@ -33,8 +33,8 @@ declare module "@luxuryescapes/router" {
     logRequests?: boolean;
     correlationIdExtractor?: (req: Request, res: Response) => string;
     logger?: Logger;
-    appEnv?: AppEnv;
     sentryDSN?: string;
+    appEnv?: AppEnv;
     swaggerBaseProperties?: {
       swagger: string;
       info: {
