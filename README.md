@@ -168,6 +168,24 @@ const controller = async (req, res) => {
 
 ```
 
+If you want to initialize Sentry for background jobs
+
+```js
+const { initializeSentry } = require('@luxuryescapes/router')
+import * as Sentry from "@sentry/node";
+
+initializeSentry({
+  appEnv: 'test',
+  sentryDSN: 'FIND_ME_IN_SENTRY'
+})
+
+try {
+  ...
+} catch(err) {
+  Sentry.captureException(err);
+}
+```
+
 NOTE: Only a limited amount of http error codes have been mapped so far, if the need for any arise we can easily add them
 
 ## Documentation
