@@ -38,7 +38,7 @@ describe('generateTypes', () => {
         }
       },
       {
-        openapi: '3.0.2'
+        openapi: '3.0.3'
       }
     )
     const output = await generateServerTypes(swagger)

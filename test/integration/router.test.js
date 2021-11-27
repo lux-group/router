@@ -9,7 +9,7 @@ const { router, errorHandler, errors } = require('../../index')
 const uuid = require('../../lib/utils/uuid')
 
 const swaggerBaseProperties = {
-  openapi: '3.0.2',
+  openapi: '3.0.3',
   info: {
     description: 'This is my api',
     version: '1.0.0',
@@ -428,7 +428,7 @@ describe('router', () => {
 
     it('should generate swagger', () => {
       expect(routerInstance.toSwagger()).to.deep.equal({
-        openapi: '3.0.2',
+        openapi: '3.0.3',
         info: {
           description: 'This is my api',
           version: '1.0.0',
