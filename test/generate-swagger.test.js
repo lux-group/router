@@ -348,6 +348,20 @@ describe('generateSwagger', () => {
   })
 
   it('generates a valid openapi', async () => {
+    const rateSchema = s('rate', s.object({
+      id: s.uuid()
+    }))
+
+    const packageSchema = s(
+      'package',
+      s.object({ id: s.uuid(), rates: s.array({ of: rateSchema }) })
+    )
+
+    const okResponseSchema = s.object({
+      id: s.number(),
+      packages: s.array({ of: packageSchema })
+    })
+
     const swagger = generateSwagger(
       {
         get: {
@@ -355,10 +369,11 @@ describe('generateSwagger', () => {
             schema: {
               request: {
                 query: s.object({
+                  page: s.integer(),
                   region: s.enum({ values: ['AU', 'NZ']})
                 })
               },
-              responses: {}
+              responses: { 200: okResponseSchema }
             }
           }
         }
@@ -366,7 +381,7 @@ describe('generateSwagger', () => {
       { openapi: '3.0.3', info: { title: "TEST API", version: 'x' } }
     ) 
     var validator = new OpenAPISchemaValidator({
-      version: 3
+      version: '3.0.3'
     })
     const result = validator.validate(swagger)
     expect(result.errors).to.deep.equal([])
