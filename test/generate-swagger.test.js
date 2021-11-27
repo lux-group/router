@@ -378,6 +378,68 @@ describe('generateSwagger', () => {
     })
   })
 
+  it('generates formatted parameters', () => {
+    const swagger = generateSwagger(
+      {
+        get: {
+          '/': {
+            schema: {
+              request: {
+                query: s.object({
+                  ids: s.array({ of: s.uuid() })
+                })
+              }
+            }
+          }
+        }
+      },
+      {}
+    )
+
+    expect(swagger.paths['/']['get'].parameters[0]).to.eql({
+      "in": "query",
+      "name": "ids",
+      "required": true,
+      "schema": {
+        "type": "array",
+        "items": {
+          "format": "uuid",
+          "type": "string"
+        },
+      }
+    })
+  })
+
+  it('handles descriptions', () => {
+    const swagger = generateSwagger(
+      {
+        get: {
+          '/': {
+            schema: {
+              request: {
+                params: s.object({
+                  id: s.uuid({ description: "The ID to lookup" })
+                })
+              }
+            }
+          }
+        }
+      },
+      {}
+    ) 
+
+    expect(swagger.paths['/']['get'].parameters[0]).to.eql({
+      "in": "path",
+      "name": "id",
+      "required": true,
+      "description": "The ID to lookup",
+      "schema": {
+        "format": "uuid",
+        "type": "string"
+      }
+    })
+  })
+
   it('generates a valid openapi', async () => {
     const rateSchema = s('rate', s.object({
       id: s.uuid()
