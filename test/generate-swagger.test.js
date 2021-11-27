@@ -174,7 +174,6 @@ describe('generateSwagger', () => {
     })
 
     expect(swagger.paths['/']['get']['responses']['200']['content']['application/json']).to.eql({
-      description: '200 response',
       schema: {
         properties: {
           id: {
@@ -294,7 +293,7 @@ describe('generateSwagger', () => {
     })
   })
 
-  it('generates parameters', () => {
+  it('generates integer parameters', () => {
     const swagger = generateSwagger(
       {
         get: {
@@ -317,6 +316,32 @@ describe('generateSwagger', () => {
       "name": "page",
       "required": true,
       "schema": { "type": "integer" }
+    })
+  })
+
+  it('generates enum parameters', () => {
+    const swagger = generateSwagger(
+      {
+        get: {
+          '/': {
+            schema: {
+              request: {
+                query: s.object({
+                  region: s.enum({ values: ['AU', 'NZ']})
+                })
+              },
+              responses: {}
+            }
+          }
+        }
+      },
+      {}
+    ) 
+    expect(swagger.paths['/']['get'].parameters[0]).to.eql({
+      "in": "query",
+      "name": "region",
+      "required": true,
+      "schema": { "enum": ["AU", "NZ"] }
     })
   })
 })
