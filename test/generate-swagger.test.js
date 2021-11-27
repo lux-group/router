@@ -1,6 +1,6 @@
 const { expect } = require('chai')
 const s = require('strummer')
-var OpenAPISchemaValidator = require('openapi-schema-validator').default;
+var OpenAPISchemaValidator = require('openapi-schema-validator').default
 
 const generateSwagger = require('../lib/generate-swagger')
 
@@ -291,7 +291,7 @@ describe('generateSwagger', () => {
     expect(swagger.paths['/']['get']['responses']['200']['content']['application/json']).to.eql({
       'schema': {
         '$ref': '#/definitions/rate'
-      },
+      }
     })
   })
 
@@ -312,12 +312,12 @@ describe('generateSwagger', () => {
         }
       },
       {}
-    ) 
+    )
     expect(swagger.paths['/']['get'].parameters[0]).to.eql({
-      "in": "query",
-      "name": "page",
-      "required": true,
-      "schema": { "type": "integer" }
+      'in': 'query',
+      'name': 'page',
+      'required': true,
+      'schema': { 'type': 'integer' }
     })
   })
 
@@ -329,7 +329,7 @@ describe('generateSwagger', () => {
             schema: {
               request: {
                 query: s.object({
-                  region: s.enum({ values: ['AU', 'NZ']})
+                  region: s.enum({ values: ['AU', 'NZ'] })
                 })
               },
               responses: {}
@@ -338,12 +338,12 @@ describe('generateSwagger', () => {
         }
       },
       {}
-    ) 
+    )
     expect(swagger.paths['/']['get'].parameters[0]).to.eql({
-      "in": "query",
-      "name": "region",
-      "required": true,
-      "schema": { "enum": ["AU", "NZ"] }
+      'in': 'query',
+      'name': 'region',
+      'required': true,
+      'schema': { 'enum': ['AU', 'NZ'] }
     })
   })
 
@@ -366,14 +366,14 @@ describe('generateSwagger', () => {
     )
 
     expect(swagger.paths['/']['get'].parameters[0]).to.eql({
-      "in": "query",
-      "name": "ids",
-      "required": true,
-      "schema": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        },
+      'in': 'query',
+      'name': 'ids',
+      'required': true,
+      'schema': {
+        'type': 'array',
+        'items': {
+          'type': 'string'
+        }
       }
     })
   })
@@ -397,15 +397,15 @@ describe('generateSwagger', () => {
     )
 
     expect(swagger.paths['/']['get'].parameters[0]).to.eql({
-      "in": "query",
-      "name": "ids",
-      "required": true,
-      "schema": {
-        "type": "array",
-        "items": {
-          "format": "uuid",
-          "type": "string"
-        },
+      'in': 'query',
+      'name': 'ids',
+      'required': true,
+      'schema': {
+        'type': 'array',
+        'items': {
+          'format': 'uuid',
+          'type': 'string'
+        }
       }
     })
   })
@@ -418,7 +418,7 @@ describe('generateSwagger', () => {
             schema: {
               request: {
                 params: s.object({
-                  id: s.uuid({ description: "The ID to lookup" })
+                  id: s.uuid({ description: 'The ID to lookup' })
                 })
               }
             }
@@ -426,16 +426,16 @@ describe('generateSwagger', () => {
         }
       },
       {}
-    ) 
+    )
 
     expect(swagger.paths['/']['get'].parameters[0]).to.eql({
-      "in": "path",
-      "name": "id",
-      "required": true,
-      "description": "The ID to lookup",
-      "schema": {
-        "format": "uuid",
-        "type": "string"
+      'in': 'path',
+      'name': 'id',
+      'required': true,
+      'description': 'The ID to lookup',
+      'schema': {
+        'format': 'uuid',
+        'type': 'string'
       }
     })
   })
@@ -463,7 +463,7 @@ describe('generateSwagger', () => {
               request: {
                 query: s.object({
                   page: s.integer(),
-                  region: s.enum({ values: ['AU', 'NZ']})
+                  region: s.enum({ values: ['AU', 'NZ'] })
                 })
               },
               responses: { 200: okResponseSchema }
@@ -471,8 +471,8 @@ describe('generateSwagger', () => {
           }
         }
       },
-      { openapi: '3.0.3', info: { title: "TEST API", version: 'x' } }
-    ) 
+      { openapi: '3.0.3', info: { title: 'TEST API', version: 'x' } }
+    )
     var validator = new OpenAPISchemaValidator({
       version: '3.0.3'
     })

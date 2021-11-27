@@ -465,7 +465,7 @@ describe('router', () => {
                         properties: { id: { type: 'integer' } },
                         required: ['id'],
                         additionalProperties: false
-                      },
+                      }
                     }
                   },
                   description: '201 response'
@@ -477,9 +477,8 @@ describe('router', () => {
                   name: 'hello',
                   in: 'query',
                   required: true,
-                  schema: { type: 'string' },
                   description: 'Different ways to greet someone',
-                  schema: { enum: ['hi', 'hello'], type: "string" }
+                  schema: { enum: ['hi', 'hello'], type: 'string' }
                 },
                 { name: 'world', in: 'query', required: true, schema: { type: 'string', maxLength: 4, minLength: 2 } },
                 { name: 'foo', in: 'query', required: false, schema: { type: 'array', items: { 'type': 'string' } } },
