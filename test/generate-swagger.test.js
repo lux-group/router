@@ -347,7 +347,7 @@ describe('generateSwagger', () => {
     })
   })
 
-  it('generates arrays', () => {
+  it('generates array parameters', () => {
     const swagger = generateSwagger(
       {
         get: {

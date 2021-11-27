@@ -481,8 +481,8 @@ describe('router', () => {
                   description: 'Different ways to greet someone',
                   schema: { enum: ['hi', 'hello'], type: "string" }
                 },
-                { name: 'world', in: 'query', required: true, schema: { type: 'string' } },
-                { name: 'foo', in: 'query', required: false,  schema: { type: 'array', items: { 'type': 'string' } } },
+                { name: 'world', in: 'query', required: true, schema: { type: 'string', maxLength: 4, minLength: 2 } },
+                { name: 'foo', in: 'query', required: false, schema: { type: 'array', items: { 'type': 'string' } } },
                 {
                   name: 'payload',
                   in: 'body',
