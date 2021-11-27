@@ -35,7 +35,7 @@ const swaggerBaseProperties = {
   ],
   paths: {},
   securityDefinitions: {},
-  definitions: {}
+  components: { schemas: {} }
 }
 
 const schema = {
@@ -495,7 +495,7 @@ describe('router', () => {
           }
         },
         securityDefinitions: {},
-        definitions: {}
+        components: { schemas: {} }
       })
     })
   })

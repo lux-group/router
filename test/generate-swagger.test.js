@@ -24,7 +24,7 @@ describe('generateSwagger', () => {
       {}
     )
 
-    expect(swagger.definitions).to.eql({
+    expect(swagger.components.schemas).to.eql({
       A: {
         properties: {
           id: {
@@ -38,12 +38,12 @@ describe('generateSwagger', () => {
     })
 
     expect(
-      swagger.paths['/']['get']['responses']['200']['schema']['properties']
+      swagger.paths['/']['get']['responses']['200']['content']['application/json']['schema']['properties']
     ).to.eql({
       x: {
         oneOf: [
           {
-            $ref: '#/definitions/A'
+            $ref: '#/components/schemas/A'
           },
           {
             properties: {
@@ -79,22 +79,22 @@ describe('generateSwagger', () => {
     )
 
     expect(
-      swagger.paths['/']['get']['responses']['200']['schema']['properties']
+      swagger.paths['/']['get']['responses']['200']['content']['application/json']['schema']['properties']
     ).to.eql({
       x: {
         oneOf: [
           {
-            $ref: '#/definitions/A'
+            $ref: '#/components/schemas/A'
           },
           {
-            $ref: '#/definitions/B'
+            $ref: '#/components/schemas/B'
           }
         ],
         type: 'object'
       }
     })
 
-    expect(swagger.definitions).to.eql({
+    expect(swagger.components.schemas).to.eql({
       A: {
         properties: {
           id: {
@@ -144,7 +144,7 @@ describe('generateSwagger', () => {
       {}
     )
 
-    expect(swagger.definitions).to.eql({
+    expect(swagger.components.schemas).to.eql({
       package: {
         properties: {
           id: {
@@ -153,7 +153,7 @@ describe('generateSwagger', () => {
           },
           rates: {
             items: {
-              $ref: '#/definitions/rate'
+              $ref: '#/components/schemas/rate'
             },
             type: 'array'
           }
@@ -173,7 +173,7 @@ describe('generateSwagger', () => {
       }
     })
 
-    expect(swagger.paths['/']['get']['responses']['200']).to.eql({
+    expect(swagger.paths['/']['get']['responses']['200']['content']['application/json']).to.eql({
       description: '200 response',
       schema: {
         properties: {
@@ -182,7 +182,7 @@ describe('generateSwagger', () => {
           },
           packages: {
             items: {
-              $ref: '#/definitions/package'
+              $ref: '#/components/schemas/package'
             },
             type: 'array'
           }
@@ -229,7 +229,7 @@ describe('generateSwagger', () => {
       {}
     )
 
-    expect(swagger.definitions).to.eql({
+    expect(swagger.components.schemas).to.eql({
       'rate': {
         'type': 'object',
         'properties': {
@@ -287,11 +287,10 @@ describe('generateSwagger', () => {
       }
     })
 
-    expect(swagger.paths['/']['get']['responses']['200']).to.eql({
+    expect(swagger.paths['/']['get']['responses']['200']['content']['application/json']).to.eql({
       'schema': {
         '$ref': '#/definitions/rate'
       },
-      'description': '200 response'
     })
   })
 })
