@@ -1,5 +1,7 @@
 const { expect } = require('chai')
 const s = require('strummer')
+var OpenAPISchemaValidator = require('openapi-schema-validator').default;
+
 const generateSwagger = require('../lib/generate-swagger')
 
 const schemaA = s(
@@ -343,5 +345,30 @@ describe('generateSwagger', () => {
       "required": true,
       "schema": { "enum": ["AU", "NZ"] }
     })
+  })
+
+  it('generates a valid openapi', async () => {
+    const swagger = generateSwagger(
+      {
+        get: {
+          '/': {
+            schema: {
+              request: {
+                query: s.object({
+                  region: s.enum({ values: ['AU', 'NZ']})
+                })
+              },
+              responses: {}
+            }
+          }
+        }
+      },
+      { openapi: '3.0.2', info: { title: "TEST API", version: 'x' } }
+    ) 
+    var validator = new OpenAPISchemaValidator({
+      version: 3
+    })
+    const result = validator.validate(swagger)
+    expect(result.errors).to.deep.equal([])
   })
 })
