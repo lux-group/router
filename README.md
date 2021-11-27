@@ -234,6 +234,30 @@ Where the path is to the file you just created.
 
 Now, anytime you run `yarn generate-types` the types will be regenerated for you to use in your controllers.
 
+## Upgrade Guides
+
+### Upgrading from v1 to v2
+
+Where you instantiate your router, change:
+
+```
+swaggerBaseProperties: {
+  swagger: "2.0",
+  ...
+```
+
+to
+
+```
+swaggerBaseProperties: {
+  openapi: "3.0.3",
+  ...
+```
+
+### Upgrading to v1
+
+The use of [Node's crypto module](https://nodejs.org/api/crypto.html) means that versions below v15.6.0 and v14.17.0 are no longer supported. Upgrade your Node version to an appropriate version.
+
 ## Contributing
 
 Make your change, make a PR
