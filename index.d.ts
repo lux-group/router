@@ -36,7 +36,7 @@ declare module "@luxuryescapes/router" {
     sentryDSN?: string;
     appEnv?: AppEnv;
     swaggerBaseProperties?: {
-      openapi: "3";
+      openapi: "3.0.2";
       info: {
         description: string;
         version: string;
