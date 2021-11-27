@@ -36,7 +36,7 @@ const server = express()
 // tags, paths, definitions get added from the route definitions
 // everything else is provided here
 const swaggerBaseProperties = {
-  swagger: '2.0',
+  openapi: '3.0.3',
   info: {
     description: 'This is my api',
     version: '1.0.0',
