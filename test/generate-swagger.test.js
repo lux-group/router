@@ -293,4 +293,30 @@ describe('generateSwagger', () => {
       },
     })
   })
+
+  it('generates parameters', () => {
+    const swagger = generateSwagger(
+      {
+        get: {
+          '/': {
+            schema: {
+              request: {
+                query: s.object({
+                  page: s.integer()
+                })
+              },
+              responses: {}
+            }
+          }
+        }
+      },
+      {}
+    ) 
+    expect(swagger.paths['/']['get'].parameters[0]).to.eql({
+      "in": "query",
+      "name": "page",
+      "required": true,
+      "schema": { "type": "integer" }
+    })
+  })
 })
