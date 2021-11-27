@@ -347,6 +347,37 @@ describe('generateSwagger', () => {
     })
   })
 
+  it('generates arrays', () => {
+    const swagger = generateSwagger(
+      {
+        get: {
+          '/': {
+            schema: {
+              request: {
+                query: s.object({
+                  ids: s.array({ of: s.string() })
+                })
+              }
+            }
+          }
+        }
+      },
+      {}
+    )
+
+    expect(swagger.paths['/']['get'].parameters[0]).to.eql({
+      "in": "query",
+      "name": "ids",
+      "required": true,
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+      }
+    })
+  })
+
   it('generates a valid openapi', async () => {
     const rateSchema = s('rate', s.object({
       id: s.uuid()
