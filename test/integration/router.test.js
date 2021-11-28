@@ -9,7 +9,6 @@ const { router, errorHandler, errors } = require('../../index')
 const uuid = require('../../lib/utils/uuid')
 
 const swaggerBaseProperties = {
-  openapi: '3.0.3',
   info: {
     description: 'This is my api',
     version: '1.0.0',

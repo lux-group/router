@@ -471,7 +471,7 @@ describe('generateSwagger', () => {
           }
         }
       },
-      { openapi: '3.0.3', info: { title: 'TEST API', version: 'x' } }
+      { info: { title: 'TEST API', version: 'x' } }
     )
     var validator = new OpenAPISchemaValidator({
       version: '3.0.3'

@@ -36,7 +36,6 @@ const server = express()
 // tags, paths, definitions get added from the route definitions
 // everything else is provided here
 const swaggerBaseProperties = {
-  openapi: '3.0.3',
   info: {
     description: 'This is my api',
     version: '1.0.0',
@@ -238,11 +237,12 @@ Now, anytime you run `yarn generate-types` the types will be regenerated for you
 
 ### Upgrading from v1 to v2
 
-Where you instantiate your router, change:
+Where you instantiate your router, remove the `swagger` property:
 
 ```
 swaggerBaseProperties: {
   swagger: "2.0",
+  info: { ... }
   ...
 ```
 
@@ -250,7 +250,7 @@ to
 
 ```
 swaggerBaseProperties: {
-  openapi: "3.0.3",
+  info: { ... }
   ...
 ```
 
