@@ -9,7 +9,6 @@ const { router, errorHandler, errors } = require('../../index')
 const uuid = require('../../lib/utils/uuid')
 
 const swaggerBaseProperties = {
-  swagger: '2.0',
   info: {
     description: 'This is my api',
     version: '1.0.0',
@@ -35,7 +34,7 @@ const swaggerBaseProperties = {
   ],
   paths: {},
   securityDefinitions: {},
-  definitions: {}
+  components: { schemas: {} }
 }
 
 const schema = {
@@ -427,8 +426,8 @@ describe('router', () => {
     })
 
     it('should generate swagger', () => {
-      expect(routerInstance.toSwagger()).to.eql({
-        swagger: '2.0',
+      expect(routerInstance.toSwagger()).to.deep.equal({
+        openapi: '3.0.3',
         info: {
           description: 'This is my api',
           version: '1.0.0',
@@ -458,27 +457,30 @@ describe('router', () => {
               description: 'This route does something',
               responses: {
                 201: {
-                  schema: {
-                    type: 'object',
-                    properties: { id: { type: 'integer' } },
-                    required: ['id'],
-                    additionalProperties: false
+                  content: {
+                    'application/json': {
+                      schema: {
+                        type: 'object',
+                        properties: { id: { type: 'integer' } },
+                        required: ['id'],
+                        additionalProperties: false
+                      }
+                    }
                   },
                   description: '201 response'
                 }
               },
               parameters: [
-                { name: 'id', in: 'path', required: true, type: 'integer' },
+                { name: 'id', in: 'path', required: true, schema: { type: 'integer' } },
                 {
                   name: 'hello',
                   in: 'query',
                   required: true,
-                  type: 'string',
                   description: 'Different ways to greet someone',
-                  enum: ['hi', 'hello']
+                  schema: { enum: ['hi', 'hello'], type: 'string' }
                 },
-                { name: 'world', in: 'query', required: true, type: 'string' },
-                { name: 'foo', in: 'query', required: false, type: 'array', items: { 'type': 'string' } },
+                { name: 'world', in: 'query', required: true, schema: { type: 'string', maxLength: 4, minLength: 2 } },
+                { name: 'foo', in: 'query', required: false, schema: { type: 'array', items: { 'type': 'string' } } },
                 {
                   name: 'payload',
                   in: 'body',
@@ -495,7 +497,7 @@ describe('router', () => {
           }
         },
         securityDefinitions: {},
-        definitions: {}
+        components: { schemas: {} }
       })
     })
   })

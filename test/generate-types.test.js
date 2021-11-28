@@ -37,9 +37,7 @@ describe('generateTypes', () => {
           }
         }
       },
-      {
-        swagger: '2.0'
-      }
+      {}
     )
     const output = await generateServerTypes(swagger)
 
@@ -54,11 +52,17 @@ export interface paths {
   };
 }
 
-export interface definitions {
-  rate: {
-    id: string;
-    opt?: ("hotel_only" | "hotel_package") | ("hotel_only" | "hotel_package")[];
-    req: ("hotel_only" | "hotel_package") | ("hotel_only" | "hotel_package")[];
+export interface components {
+  schemas: {
+    rate: {
+      id: string;
+      opt?:
+        | ("hotel_only" | "hotel_package")
+        | ("hotel_only" | "hotel_package")[];
+      req:
+        | ("hotel_only" | "hotel_package")
+        | ("hotel_only" | "hotel_package")[];
+    };
   };
 }
 
@@ -73,7 +77,9 @@ export interface operations {
     responses: {
       /** 200 response */
       200: {
-        schema: definitions["rate"];
+        content: {
+          "application/json": definitions["rate"];
+        };
       };
     };
   };

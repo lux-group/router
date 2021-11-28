@@ -1,5 +1,7 @@
 const { expect } = require('chai')
 const s = require('strummer')
+var OpenAPISchemaValidator = require('openapi-schema-validator').default
+
 const generateSwagger = require('../lib/generate-swagger')
 
 const schemaA = s(
@@ -24,7 +26,7 @@ describe('generateSwagger', () => {
       {}
     )
 
-    expect(swagger.definitions).to.eql({
+    expect(swagger.components.schemas).to.eql({
       A: {
         properties: {
           id: {
@@ -38,12 +40,12 @@ describe('generateSwagger', () => {
     })
 
     expect(
-      swagger.paths['/']['get']['responses']['200']['schema']['properties']
+      swagger.paths['/']['get']['responses']['200']['content']['application/json']['schema']['properties']
     ).to.eql({
       x: {
         oneOf: [
           {
-            $ref: '#/definitions/A'
+            $ref: '#/components/schemas/A'
           },
           {
             properties: {
@@ -79,22 +81,22 @@ describe('generateSwagger', () => {
     )
 
     expect(
-      swagger.paths['/']['get']['responses']['200']['schema']['properties']
+      swagger.paths['/']['get']['responses']['200']['content']['application/json']['schema']['properties']
     ).to.eql({
       x: {
         oneOf: [
           {
-            $ref: '#/definitions/A'
+            $ref: '#/components/schemas/A'
           },
           {
-            $ref: '#/definitions/B'
+            $ref: '#/components/schemas/B'
           }
         ],
         type: 'object'
       }
     })
 
-    expect(swagger.definitions).to.eql({
+    expect(swagger.components.schemas).to.eql({
       A: {
         properties: {
           id: {
@@ -144,7 +146,7 @@ describe('generateSwagger', () => {
       {}
     )
 
-    expect(swagger.definitions).to.eql({
+    expect(swagger.components.schemas).to.eql({
       package: {
         properties: {
           id: {
@@ -153,7 +155,7 @@ describe('generateSwagger', () => {
           },
           rates: {
             items: {
-              $ref: '#/definitions/rate'
+              $ref: '#/components/schemas/rate'
             },
             type: 'array'
           }
@@ -173,8 +175,7 @@ describe('generateSwagger', () => {
       }
     })
 
-    expect(swagger.paths['/']['get']['responses']['200']).to.eql({
-      description: '200 response',
+    expect(swagger.paths['/']['get']['responses']['200']['content']['application/json']).to.eql({
       schema: {
         properties: {
           id: {
@@ -182,7 +183,7 @@ describe('generateSwagger', () => {
           },
           packages: {
             items: {
-              $ref: '#/definitions/package'
+              $ref: '#/components/schemas/package'
             },
             type: 'array'
           }
@@ -229,7 +230,7 @@ describe('generateSwagger', () => {
       {}
     )
 
-    expect(swagger.definitions).to.eql({
+    expect(swagger.components.schemas).to.eql({
       'rate': {
         'type': 'object',
         'properties': {
@@ -287,11 +288,195 @@ describe('generateSwagger', () => {
       }
     })
 
-    expect(swagger.paths['/']['get']['responses']['200']).to.eql({
+    expect(swagger.paths['/']['get']['responses']['200']['content']['application/json']).to.eql({
       'schema': {
         '$ref': '#/definitions/rate'
-      },
-      'description': '200 response'
+      }
     })
+  })
+
+  it('generates integer parameters', () => {
+    const swagger = generateSwagger(
+      {
+        get: {
+          '/': {
+            schema: {
+              request: {
+                query: s.object({
+                  page: s.integer()
+                })
+              },
+              responses: {}
+            }
+          }
+        }
+      },
+      {}
+    )
+    expect(swagger.paths['/']['get'].parameters[0]).to.eql({
+      'in': 'query',
+      'name': 'page',
+      'required': true,
+      'schema': { 'type': 'integer' }
+    })
+  })
+
+  it('generates enum parameters', () => {
+    const swagger = generateSwagger(
+      {
+        get: {
+          '/': {
+            schema: {
+              request: {
+                query: s.object({
+                  region: s.enum({ values: ['AU', 'NZ'] })
+                })
+              },
+              responses: {}
+            }
+          }
+        }
+      },
+      {}
+    )
+    expect(swagger.paths['/']['get'].parameters[0]).to.eql({
+      'in': 'query',
+      'name': 'region',
+      'required': true,
+      'schema': { 'enum': ['AU', 'NZ'] }
+    })
+  })
+
+  it('generates array parameters', () => {
+    const swagger = generateSwagger(
+      {
+        get: {
+          '/': {
+            schema: {
+              request: {
+                query: s.object({
+                  ids: s.array({ of: s.string() })
+                })
+              }
+            }
+          }
+        }
+      },
+      {}
+    )
+
+    expect(swagger.paths['/']['get'].parameters[0]).to.eql({
+      'in': 'query',
+      'name': 'ids',
+      'required': true,
+      'schema': {
+        'type': 'array',
+        'items': {
+          'type': 'string'
+        }
+      }
+    })
+  })
+
+  it('generates formatted parameters', () => {
+    const swagger = generateSwagger(
+      {
+        get: {
+          '/': {
+            schema: {
+              request: {
+                query: s.object({
+                  ids: s.array({ of: s.uuid() })
+                })
+              }
+            }
+          }
+        }
+      },
+      {}
+    )
+
+    expect(swagger.paths['/']['get'].parameters[0]).to.eql({
+      'in': 'query',
+      'name': 'ids',
+      'required': true,
+      'schema': {
+        'type': 'array',
+        'items': {
+          'format': 'uuid',
+          'type': 'string'
+        }
+      }
+    })
+  })
+
+  it('handles descriptions', () => {
+    const swagger = generateSwagger(
+      {
+        get: {
+          '/': {
+            schema: {
+              request: {
+                params: s.object({
+                  id: s.uuid({ description: 'The ID to lookup' })
+                })
+              }
+            }
+          }
+        }
+      },
+      {}
+    )
+
+    expect(swagger.paths['/']['get'].parameters[0]).to.eql({
+      'in': 'path',
+      'name': 'id',
+      'required': true,
+      'description': 'The ID to lookup',
+      'schema': {
+        'format': 'uuid',
+        'type': 'string'
+      }
+    })
+  })
+
+  it('generates a valid openapi', async () => {
+    const rateSchema = s('rate', s.object({
+      id: s.uuid()
+    }))
+
+    const packageSchema = s(
+      'package',
+      s.object({ id: s.uuid(), rates: s.array({ of: rateSchema }) })
+    )
+
+    const okResponseSchema = s.object({
+      id: s.number(),
+      packages: s.array({ of: packageSchema })
+    })
+
+    const swagger = generateSwagger(
+      {
+        get: {
+          '/': {
+            schema: {
+              request: {
+                query: s.object({
+                  page: s.integer(),
+                  region: s.enum({ values: ['AU', 'NZ'] })
+                })
+              },
+              responses: { 200: okResponseSchema }
+            }
+          }
+        }
+      },
+      { info: { title: 'TEST API', version: 'x' } }
+    )
+    var validator = new OpenAPISchemaValidator({
+      version: '3.0.3'
+    })
+    const result = validator.validate(swagger)
+    expect(result.errors).to.deep.equal([])
   })
 })

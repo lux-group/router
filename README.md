@@ -36,7 +36,6 @@ const server = express()
 // tags, paths, definitions get added from the route definitions
 // everything else is provided here
 const swaggerBaseProperties = {
-  swagger: '2.0',
   info: {
     description: 'This is my api',
     version: '1.0.0',
@@ -233,6 +232,31 @@ Where the path is to the file you just created.
 ## Profit
 
 Now, anytime you run `yarn generate-types` the types will be regenerated for you to use in your controllers.
+
+## Upgrade Guides
+
+### Upgrading from v1 to v2
+
+Where you instantiate your router, remove the `swagger` property:
+
+```
+swaggerBaseProperties: {
+  swagger: "2.0",
+  info: { ... }
+  ...
+```
+
+to
+
+```
+swaggerBaseProperties: {
+  info: { ... }
+  ...
+```
+
+### Upgrading to v1
+
+The use of [Node's crypto module](https://nodejs.org/api/crypto.html) means that versions below v15.6.0 and v14.17.0 are no longer supported. Upgrade your Node version to an appropriate version.
 
 ## Contributing
 

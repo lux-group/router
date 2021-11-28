@@ -36,7 +36,6 @@ declare module "@luxuryescapes/router" {
     sentryDSN?: string;
     appEnv?: AppEnv;
     swaggerBaseProperties?: {
-      swagger: string;
       info: {
         description: string;
         version: string;
