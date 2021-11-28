@@ -315,6 +315,15 @@ describe('generateSwagger', () => {
         ]
       }
     })
+
+    expect(swagger.paths['/'].get.parameters[0]).to.deep.equal({
+      'in': 'query',
+      'name': 'region',
+      'required': true,
+      'schema': {
+        '$ref': '#/components/schemas/region'
+      }
+    })
   })
 
   it('handles descriptions', () => {
