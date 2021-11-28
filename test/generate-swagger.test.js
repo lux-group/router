@@ -1,103 +1,59 @@
 const { expect } = require('chai')
 const s = require('strummer')
-var OpenAPISchemaValidator = require('openapi-schema-validator').default
+const OpenAPISchemaValidator = require('openapi-schema-validator').default
 
 const generateSwagger = require('../lib/generate-swagger')
 
-const schemaA = s(
-  'A',
-  s.object({
-    id: s.uuid()
-  })
+const rateSchema = s('rate', s.object({
+  id: s.uuid()
+}))
+
+const hotelSchema = s('hotel', s.object({
+  id: s.uuid()
+}))
+
+const tourSchema = s('tour', s.object({
+  id: s.uuid()
+}))
+
+const packageSchema = s(
+  'package',
+  s.object({ id: s.uuid(), rates: s.array({ of: rateSchema }) })
 )
 
-describe('generateSwagger', () => {
-  it('creates definitions for partially named one ofs', () => {
-    const schemaB = s.object({
-      id: s.uuid()
-    })
-
-    const schema = s.object({ x: s.oneOf([schemaA, schemaB]) })
-
-    const swagger = generateSwagger(
-      {
-        get: { '/': { schema: { request: {}, responses: { 200: schema } } } }
-      },
-      {}
-    )
-
-    expect(swagger.components.schemas).to.eql({
-      A: {
-        properties: {
-          id: {
-            format: 'uuid',
-            type: 'string'
-          }
-        },
-        required: ['id'],
-        type: 'object'
+const buildRouteDefinitions = ({ query, params, response }) =>
+  ({
+    get: {
+      '/': {
+        schema: {
+          request: { query, params },
+          responses: response ? { 200: response } : {}
+        }
       }
-    })
-
-    expect(
-      swagger.paths['/']['get']['responses']['200']['content']['application/json']['schema']['properties']
-    ).to.eql({
-      x: {
-        oneOf: [
-          {
-            $ref: '#/components/schemas/A'
-          },
-          {
-            properties: {
-              id: {
-                format: 'uuid',
-                type: 'string'
-              }
-            },
-            required: ['id'],
-            type: 'object'
-          }
-        ],
-        type: 'object'
-      }
-    })
+    }
   })
 
+const baseProperties = { info: { title: 'TEST API', version: 'x' } }
+
+describe('generateSwagger', () => {
   it('creates definitions for one of', () => {
-    const schemaB = s(
-      'B',
-      s.object({
-        id: s.uuid()
-      })
-    )
-
-    const schema = s.object({ x: s.oneOf([schemaA, schemaB]) })
-
-    const swagger = generateSwagger(
-      {
-        get: { '/': { schema: { request: {}, responses: { 200: schema } } } }
-      },
-      {}
-    )
+    const response = s.object({ x: s.oneOf([hotelSchema, tourSchema]) })
+    const swagger = generateSwagger(buildRouteDefinitions({ response }), baseProperties)
 
     expect(
       swagger.paths['/']['get']['responses']['200']['content']['application/json']['schema']['properties']
     ).to.eql({
       x: {
         oneOf: [
-          {
-            $ref: '#/components/schemas/A'
-          },
-          {
-            $ref: '#/components/schemas/B'
-          }
+          { $ref: '#/components/schemas/hotel' },
+          { $ref: '#/components/schemas/tour' }
         ],
         type: 'object'
       }
     })
 
     expect(swagger.components.schemas).to.eql({
-      A: {
+      hotel: {
         properties: {
           id: {
             format: 'uuid',
@@ -107,7 +63,7 @@ describe('generateSwagger', () => {
         required: ['id'],
         type: 'object'
       },
-      B: {
+      tour: {
         properties: {
           id: {
             format: 'uuid',
@@ -121,30 +77,11 @@ describe('generateSwagger', () => {
   })
 
   it('creates definitions for arrays of arrays', () => {
-    const rateSchema = s('rate', s.object({
-      id: s.uuid()
-    }))
-
-    const packageSchema = s(
-      'package',
-      s.object({ id: s.uuid(), rates: s.array({ of: rateSchema }) })
-    )
-
-    const okResponseSchema = s.object({
+    const response = s.object({
       id: s.number(),
       packages: s.array({ of: packageSchema })
     })
-
-    const swagger = generateSwagger(
-      {
-        get: {
-          '/': {
-            schema: { request: {}, responses: { 200: okResponseSchema } }
-          }
-        }
-      },
-      {}
-    )
+    const swagger = generateSwagger(buildRouteDefinitions({ response }), baseProperties)
 
     expect(swagger.components.schemas).to.eql({
       package: {
@@ -154,9 +91,7 @@ describe('generateSwagger', () => {
             type: 'string'
           },
           rates: {
-            items: {
-              $ref: '#/components/schemas/rate'
-            },
+            items: { $ref: '#/components/schemas/rate' },
             type: 'array'
           }
         },
@@ -182,9 +117,7 @@ describe('generateSwagger', () => {
             type: 'number'
           },
           packages: {
-            items: {
-              $ref: '#/components/schemas/package'
-            },
+            items: { $ref: '#/components/schemas/package' },
             type: 'array'
           }
         },
@@ -195,7 +128,7 @@ describe('generateSwagger', () => {
   })
 
   it('creates definitions for deep options', () => {
-    const rateSchema = s('rate', s.object({
+    const response = s('rate', s.object({
       id: s.uuid(),
       opt: s.optional(
         s.oneOf([
@@ -220,13 +153,7 @@ describe('generateSwagger', () => {
     }))
 
     const swagger = generateSwagger(
-      {
-        get: {
-          '/': {
-            schema: { request: {}, responses: { 200: rateSchema } }
-          }
-        }
-      },
+      buildRouteDefinitions({ response }),
       {}
     )
 
@@ -289,30 +216,16 @@ describe('generateSwagger', () => {
     })
 
     expect(swagger.paths['/']['get']['responses']['200']['content']['application/json']).to.eql({
-      'schema': {
-        '$ref': '#/definitions/rate'
-      }
+      'schema': { '$ref': '#/definitions/rate' }
     })
   })
 
   it('generates integer parameters', () => {
     const swagger = generateSwagger(
-      {
-        get: {
-          '/': {
-            schema: {
-              request: {
-                query: s.object({
-                  page: s.integer()
-                })
-              },
-              responses: {}
-            }
-          }
-        }
-      },
-      {}
+      buildRouteDefinitions({ query: s.object({ page: s.integer() }) }),
+      baseProperties
     )
+
     expect(swagger.paths['/']['get'].parameters[0]).to.eql({
       'in': 'query',
       'name': 'page',
@@ -323,22 +236,14 @@ describe('generateSwagger', () => {
 
   it('generates enum parameters', () => {
     const swagger = generateSwagger(
-      {
-        get: {
-          '/': {
-            schema: {
-              request: {
-                query: s.object({
-                  region: s.enum({ values: ['AU', 'NZ'] })
-                })
-              },
-              responses: {}
-            }
-          }
-        }
-      },
-      {}
+      buildRouteDefinitions({
+        query: s.object({
+          region: s.enum({ values: ['AU', 'NZ'] })
+        })
+      }),
+      baseProperties
     )
+
     expect(swagger.paths['/']['get'].parameters[0]).to.eql({
       'in': 'query',
       'name': 'region',
@@ -349,20 +254,12 @@ describe('generateSwagger', () => {
 
   it('generates array parameters', () => {
     const swagger = generateSwagger(
-      {
-        get: {
-          '/': {
-            schema: {
-              request: {
-                query: s.object({
-                  ids: s.array({ of: s.string() })
-                })
-              }
-            }
-          }
-        }
-      },
-      {}
+      buildRouteDefinitions({
+        query: s.object({
+          ids: s.array({ of: s.string() })
+        })
+      }),
+      baseProperties
     )
 
     expect(swagger.paths['/']['get'].parameters[0]).to.eql({
@@ -371,29 +268,19 @@ describe('generateSwagger', () => {
       'required': true,
       'schema': {
         'type': 'array',
-        'items': {
-          'type': 'string'
-        }
+        'items': { 'type': 'string' }
       }
     })
   })
 
   it('generates formatted parameters', () => {
     const swagger = generateSwagger(
-      {
-        get: {
-          '/': {
-            schema: {
-              request: {
-                query: s.object({
-                  ids: s.array({ of: s.uuid() })
-                })
-              }
-            }
-          }
-        }
-      },
-      {}
+      buildRouteDefinitions({
+        query: s.object({
+          ids: s.array({ of: s.uuid() })
+        })
+      }),
+      baseProperties
     )
 
     expect(swagger.paths['/']['get'].parameters[0]).to.eql({
@@ -412,20 +299,12 @@ describe('generateSwagger', () => {
 
   it('handles descriptions', () => {
     const swagger = generateSwagger(
-      {
-        get: {
-          '/': {
-            schema: {
-              request: {
-                params: s.object({
-                  id: s.uuid({ description: 'The ID to lookup' })
-                })
-              }
-            }
-          }
-        }
-      },
-      {}
+      buildRouteDefinitions({
+        params: s.object({
+          id: s.uuid({ description: 'The ID to lookup' })
+        })
+      }),
+      baseProperties
     )
 
     expect(swagger.paths['/']['get'].parameters[0]).to.eql({
@@ -441,38 +320,18 @@ describe('generateSwagger', () => {
   })
 
   it('generates a valid openapi', async () => {
-    const rateSchema = s('rate', s.object({
-      id: s.uuid()
-    }))
+    const query = s.object({
+      page: s.integer(),
+      region: s.enum({ values: ['AU', 'NZ'] })
+    })
 
-    const packageSchema = s(
-      'package',
-      s.object({ id: s.uuid(), rates: s.array({ of: rateSchema }) })
-    )
-
-    const okResponseSchema = s.object({
+    const response = s.object({
       id: s.number(),
       packages: s.array({ of: packageSchema })
     })
 
-    const swagger = generateSwagger(
-      {
-        get: {
-          '/': {
-            schema: {
-              request: {
-                query: s.object({
-                  page: s.integer(),
-                  region: s.enum({ values: ['AU', 'NZ'] })
-                })
-              },
-              responses: { 200: okResponseSchema }
-            }
-          }
-        }
-      },
-      { info: { title: 'TEST API', version: 'x' } }
-    )
+    const swagger = generateSwagger(buildRouteDefinitions({ query, response }), baseProperties)
+
     var validator = new OpenAPISchemaValidator({
       version: '3.0.3'
     })
