@@ -297,6 +297,35 @@ describe('generateSwagger', () => {
     })
   })
 
+  it('generates component schemas for query params', () => {
+    const swagger = generateSwagger(
+      buildRouteDefinitions({
+        query: s.object({
+          region: s('region', s.enum({ values: ['AU', 'NZ'] }))
+        })
+      }),
+      baseProperties
+    )
+
+    expect(swagger.components.schemas).to.eql({
+      'region': {
+        'enum': [
+          'AU',
+          'NZ'
+        ]
+      }
+    })
+
+    expect(swagger.paths['/'].get.parameters[0]).to.deep.equal({
+      'in': 'query',
+      'name': 'region',
+      'required': true,
+      'schema': {
+        '$ref': '#/components/schemas/region'
+      }
+    })
+  })
+
   it('handles descriptions', () => {
     const swagger = generateSwagger(
       buildRouteDefinitions({
