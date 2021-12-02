@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const s = require('strummer')
+const s = require('@luxuryescapes/strummer')
 const OpenAPISchemaValidator = require('openapi-schema-validator').default
 
 const generateSwagger = require('../lib/generate-swagger')

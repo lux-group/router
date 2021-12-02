@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const s = require('strummer')
+const s = require('@luxuryescapes/strummer')
 const generateSwagger = require('../lib/generate-swagger')
 const generateServerTypes = require('openapi-typescript').default
 
