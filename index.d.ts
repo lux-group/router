@@ -1,5 +1,6 @@
 declare module "@luxuryescapes/router" {
   import { Request, Response, Express, NextFunction, Handler, RequestHandler } from "express";
+  import { Matcher } from "@luxuryescapes/strummer"
 
   export function errorHandler(
     err: Error,
@@ -59,14 +60,12 @@ declare module "@luxuryescapes/router" {
   }
 
   interface RouteSchema {
-    request?: {
-      query?: object;
-      params?: object;
-      body?: object;
+    request: {
+      query?: Matcher;
+      params?: Matcher;
+      body?: Matcher;
     };
-    responses?: {
-      [index: number]: object;
-    }
+    responses: Record<number, Matcher>
   }
 
   interface RouteOptions {

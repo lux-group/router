@@ -1,7 +1,7 @@
 const chai = require('chai')
 const sinon = require('sinon')
 const express = require('express')
-const s = require('strummer')
+const s = require('@luxuryescapes/strummer')
 
 const expect = chai.expect
 

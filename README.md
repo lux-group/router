@@ -5,7 +5,7 @@
 
 > Opinionated wrapper around express
 
-Opinionated wrapper around express, which adds in validation via [strummer](https://github.com/Tabcorp/strummer/) and documentation via [swagger](https://swagger.io/)
+Opinionated wrapper around express, which adds in validation via [strummer](https://github.com/lux-group/strummer/) and documentation via [swagger](https://swagger.io/)
 
 ## Table of contents
 
@@ -28,7 +28,7 @@ yarn add @sentry/node # optional for Sentry support
 
 ```js
 const express = require('express')
-const s = require('strummer')
+const s = require('@luxuryescapes/strummer')
 const { router } = require('@luxuryescapes/router')
 
 const server = express()
