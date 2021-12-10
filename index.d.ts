@@ -103,6 +103,7 @@ declare module "@luxuryescapes/router" {
 
   export function router(app: Express, config: RouterConfig): RouterAbstraction;
   export function initializeSentry(config: SentryConfig): boolean;
+  export function sentryInitialized(): boolean;
 
   interface HTTPError extends Error {
     new (code: number, message: string, errors?: (string | object)[]) : HTTPError
