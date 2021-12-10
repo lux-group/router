@@ -36,6 +36,38 @@ const buildRouteDefinitions = ({ query, params, response }) =>
 const baseProperties = { info: { title: 'TEST API', version: 'x' } }
 
 describe('generateSwagger', () => {
+  it('creates definitions for hashmap', () => {
+    const response = s.hashmap(packageSchema)
+    const swagger = generateSwagger(buildRouteDefinitions({ response }), baseProperties)
+
+    expect(swagger.components.schemas).to.eql({
+      package: {
+        properties: {
+          id: {
+            format: 'uuid',
+            type: 'string'
+          },
+          rates: {
+            items: { $ref: '#/components/schemas/rate' },
+            type: 'array'
+          }
+        },
+        required: ['id', 'rates'],
+        type: 'object'
+      },
+      rate: {
+        properties: {
+          id: {
+            format: 'uuid',
+            type: 'string'
+          }
+        },
+        required: ['id'],
+        type: 'object'
+      }
+    })
+  })
+
   it('creates definitions for one of', () => {
     const response = s.object({ x: s.oneOf([hotelSchema, tourSchema]) })
     const swagger = generateSwagger(buildRouteDefinitions({ response }), baseProperties)
