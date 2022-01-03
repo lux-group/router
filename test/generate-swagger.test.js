@@ -4,6 +4,10 @@ const OpenAPISchemaValidator = require('openapi-schema-validator').default
 
 const generateSwagger = require('../lib/generate-swagger')
 
+const unnamedSchema = s.object({
+  id: s.uuid()
+})
+
 const rateSchema = s('rate', s.object({
   id: s.uuid()
 }))
@@ -36,6 +40,86 @@ const buildRouteDefinitions = ({ query, params, response }) =>
 const baseProperties = { info: { title: 'TEST API', version: 'x' } }
 
 describe('generateSwagger', () => {
+  it('creates definitions for hashmap', () => {
+    const response = s.object({
+      packages: s.hashmap(packageSchema)
+    })
+    const swagger = generateSwagger(buildRouteDefinitions({ response }), baseProperties)
+
+    expect(swagger.paths['/']['get']['responses']['200']['content']['application/json']['schema']).to.eql({
+      properties: {
+        packages: {
+          additionalProperties: { $ref: '#/components/schemas/package' },
+          type: 'object'
+        }
+      },
+      required: [
+        'packages'
+      ],
+      type: 'object'
+    })
+
+    expect(swagger.components.schemas).to.eql({
+      package: {
+        properties: {
+          id: {
+            format: 'uuid',
+            type: 'string'
+          },
+          rates: {
+            items: { $ref: '#/components/schemas/rate' },
+            type: 'array'
+          }
+        },
+        required: ['id', 'rates'],
+        type: 'object'
+      },
+      rate: {
+        properties: {
+          id: {
+            format: 'uuid',
+            type: 'string'
+          }
+        },
+        required: ['id'],
+        type: 'object'
+      }
+    })
+  })
+
+  it('does not create definitions for unnamed hashmaps', () => {
+    const response = s.objectWithOnly({
+      packages: s.hashmap(unnamedSchema)
+    })
+
+    const swagger = generateSwagger(buildRouteDefinitions({ response }), baseProperties)
+
+    expect(swagger.paths['/']['get']['responses']['200']['content']['application/json']['schema']).to.eql({
+      additionalProperties: false,
+      properties: {
+        packages: {
+          additionalProperties: {
+            properties: {
+              id: {
+                format: 'uuid',
+                type: 'string'
+              }
+            },
+            required: ['id'],
+            type: 'object'
+          },
+          type: 'object'
+        }
+      },
+      required: [
+        'packages'
+      ],
+      type: 'object'
+    })
+
+    expect(swagger.components.schemas).to.eql({})
+  })
+
   it('creates definitions for one of', () => {
     const response = s.object({ x: s.oneOf([hotelSchema, tourSchema]) })
     const swagger = generateSwagger(buildRouteDefinitions({ response }), baseProperties)
