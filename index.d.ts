@@ -1,5 +1,5 @@
 declare module "@luxuryescapes/router" {
-  import { Request, Response, Express, NextFunction, Handler, RequestHandler } from "express";
+  import { Request, Response, Express, NextFunction, Handler as ExpressHandler, RequestHandler } from "express";
   import { Matcher } from "@luxuryescapes/strummer"
 
   export function errorHandler(
@@ -55,7 +55,7 @@ declare module "@luxuryescapes/router" {
       paths: object;
       securityDefinitions: object;
       definitions: object;
-      preHandlers?: Handler[];
+      preHandlers?: ExpressHandler[];
     };
   }
 
@@ -73,7 +73,7 @@ declare module "@luxuryescapes/router" {
     operationId?: string;
     schema?: RouteSchema;
     isPublic?: boolean;
-    preHandlers?: Handler[];
+    preHandlers?: ExpressHandler[];
     handlers: RequestHandler<any, any, any, any>[];
     tags?: string[];
     summary?: string;
@@ -130,4 +130,40 @@ declare module "@luxuryescapes/router" {
   }
 
   export const errors: errors
+
+  interface Schema<T> {
+    content: {
+      "application/json": T;
+    };
+  }
+  
+  type ResBody<
+    operations extends Record<string, any>,
+    O extends keyof operations,
+    Response = operations[O]["responses"]
+  > = Response[keyof Response] extends Schema<infer S> ? S : never;
+  
+  export interface Handler<
+    operations extends Record<string, any>,
+    O extends keyof operations,
+    R = ResBody<operations, O>,
+    parameters = operations[O]["parameters"]
+  > {
+    (
+      req: Request<
+        parameters extends { path: any }
+          ? parameters["path"]
+          : Record<string, never>,
+        R,
+        parameters extends { body: { payload: any } }
+          ? parameters["body"]["payload"]
+          : Record<string, never>,
+        parameters extends { query: any }
+          ? parameters["query"]
+          : Record<string, never>
+      >,
+      res: Response<R>,
+      next: NextFunction
+    ): void | Promise<void>;
+  }
 }
