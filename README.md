@@ -223,7 +223,7 @@ Eventually we'll move this script in to this library and expose a CLI command so
 
 ### Add a script to your package.json
 
-```
+```json
 {
   "scripts": {
     "generate-types": "./src/scripts/generate-types.ts"
@@ -239,7 +239,7 @@ Now, anytime you run `yarn generate-types` the types will be regenerated for you
 
 For example:
 
-```
+```ts
 import { Handler } from '@luxuryescapes/router';
 import { operations } from '../../contract/server';
 
