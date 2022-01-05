@@ -55,6 +55,7 @@ export interface paths {
 export interface components {
   schemas: {
     rate: {
+      /** Format: uuid */
       id: string;
       opt?:
         | ("hotel_only" | "hotel_package")
