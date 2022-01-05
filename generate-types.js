@@ -8,7 +8,9 @@ const { generateTypes } = require('./index')
 
 const routerPath = process.argv[2]
 if (!routerPath) throw new Error('Usage: yarn generateTypes <path-to-router> <path-to-contract>')
+
 const contractPath = process.argv[3]
+if (!contractPath) throw new Error('Usage: yarn generateTypes <path-to-router> <path-to-contract>')
 
 const { mount } = require(process.cwd() + '/' + routerPath)
 
