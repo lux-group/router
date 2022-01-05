@@ -206,11 +206,20 @@ TypeScript types.
 
 ### Create a helper file in your project
 
-See here for an example: https://github.com/lux-group/svc-public-offer/blob/master/src/script/generateTypes.ts
+```ts
+import { generateTypes } from "@luxuryescapes/router";
+import { mount } from "../routes";
+
+const generate = async () => {
+  await generateTypes(mount, "./src/contract");
+};
+
+generate().then(() => process.exit(0));
+```
 
 `mount` is a function that takes an Express server and returns a RouterAbstraction. In short, it's a function that uses @luxuryescapes/router to set up your endpoints.
 
-Eventually this step will not be required. See https://aussiecommerce.atlassian.net/browse/ENGX-249
+Eventually we'll move this script in to this library and expose a CLI command so this step will not be required.
 
 ### Add a script to your package.json
 
