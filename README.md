@@ -201,43 +201,22 @@ If you want the raw swagger json definition you can use `toSwagger`
 
 ## TypeScript
 
-If you use Strummer schemas to validate your endpoints, you can use the following steps to auto-generate
+If you use Strummer schemas to validate your endpoints, you can use the generateTypes CLI command to auto-generate
 TypeScript types.
 
-### Create a helper file in your project
+For example if your router was in src/router.ts, and you wanted to output the contract to src/api/contract/server.ts, you would do:
 
-```ts
-import { generateTypes } from "@luxuryescapes/router";
-import { mount } from "../routes";
-
-const generate = async () => {
-  await generateTypes(mount, "./src/contract");
-};
-
-generate().then(() => process.exit(0));
+```bash
+yarn generateTypes src/router.ts src/api/contract/server.ts
 ```
 
-`mount` is a function that takes an Express server and returns a RouterAbstraction. In short, it's a function that uses @luxuryescapes/router to set up your endpoints.
-
-Eventually we'll move this script in to this library and expose a CLI command so this step will not be required.
-
-### Add a script to your package.json
-
-```json
-{
-  "scripts": {
-    "generate-types": "./src/scripts/generate-types.ts"
-  }
-}
-```
-
-Where the path is to the file you just created.
+Your router file must export a `mount` function that takes an Express server and returns a RouterAbstraction. In short, it's a function that uses @luxuryescapes/router to set up your endpoints.
 
 ### Profit
 
-Now, anytime you run `yarn generate-types` the types will be regenerated for you to use in your controllers.
+Now, anytime you run `yarn generateTypes` the types will be regenerated for you to use in your controllers.
 
-For example:
+An example of the contract usage is:
 
 ```ts
 import { Handler } from '@luxuryescapes/router';
