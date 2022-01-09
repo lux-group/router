@@ -1,9 +1,12 @@
 {
   "name": "@luxuryescapes/router",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Wrapper around express router that provides validation and documentation out of the box",
   "main": "index.js",
   "types": "index.d.ts",
+  "bin": {
+    "generateTypes": "generate-types.js"
+  },
   "scripts": {
     "test": "mocha --recursive",
     "lint": "standard | snazzy"
