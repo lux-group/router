@@ -16,14 +16,12 @@ Opinionated wrapper around express, which adds in validation via [strummer](http
 
 ```
 npm install @luxuryescapes/router
-npm install @sentry/node # optional for Sentry support
 ```
 
 or
 
 ```
 yarn add @luxuryescapes/router
-yarn add @sentry/node # optional for Sentry support
 ```
 
 ```js
@@ -207,14 +205,14 @@ TypeScript types.
 For example if your router was in src/router.ts, and you wanted to output the contract to src/api/contract/server.ts, you would do:
 
 ```bash
-yarn generateTypes src/router.ts src/api/contract/server.ts
+yarn routerGenerateTypes src/router.ts src/api/contract/server.ts
 ```
 
 Your router file must export a `mount` function that takes an Express server and returns a RouterAbstraction. In short, it's a function that uses @luxuryescapes/router to set up your endpoints.
 
 ### Profit
 
-Now, anytime you run `yarn generateTypes` the types will be regenerated for you to use in your controllers.
+Now, anytime you run `yarn routerGenerateTypes` the types will be regenerated for you to use in your controllers.
 
 An example of the contract usage is:
 
