@@ -33,7 +33,7 @@ async function generate () {
 
 generate()
   .then((pendingCommits) => {
-    const exitCode = process.argv[2] === 'ci' && pendingCommits ? 1 : 0
+    const exitCode = process.argv[4] === '--ci' && pendingCommits ? 1 : 0
     process.exit(exitCode)
   })
   .catch((e) => {

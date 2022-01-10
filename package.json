@@ -5,7 +5,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "bin": {
-    "generateTypes": "generate-types.js"
+    "router:generateTypes": "generate-types.js"
   },
   "scripts": {
     "test": "mocha --recursive",
