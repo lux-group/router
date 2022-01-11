@@ -1,6 +1,6 @@
 {
   "name": "@luxuryescapes/router",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "description": "Wrapper around express router that provides validation and documentation out of the box",
   "main": "index.js",
   "types": "index.d.ts",
@@ -31,7 +31,9 @@
     "openapi-schema-validator": "^9.3.1",
     "sinon": "^7.5.0",
     "snazzy": "^8.0.0",
-    "standard": "^12.0.1"
+    "standard": "^12.0.1",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.4"
   },
   "peerDependencies": {
     "express": "^4.17.1"

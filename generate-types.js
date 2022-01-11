@@ -6,15 +6,36 @@ const { promisify } = require('util')
 const { exec } = require('child_process')
 const { generateTypes } = require('./index')
 
+const exit = (message) => {
+  console.error(message)
+  process.exit(1)
+}
+
 const routerPath = process.argv[2]
-if (!routerPath) throw new Error('Usage: yarn generateTypes <path-to-router> <path-to-contract>')
+if (!routerPath) {
+  exit('Usage: yarn generateTypes <path-to-router> <path-to-contract>')
+}
 
 const contractPath = process.argv[3]
-if (!contractPath) throw new Error('Usage: yarn generateTypes <path-to-router> <path-to-contract>')
+if (!contractPath) {
+  exit('Usage: yarn generateTypes <path-to-router> <path-to-contract>')
+}
 
-const { mount } = require(process.cwd() + '/' + routerPath)
+const getMount = () => {
+  try {
+    const { mount } = require(process.cwd() + '/' + routerPath)
+    if (typeof mount !== 'function') exit(`Error: ${routerPath} does not export a mount function`)
+    return mount
+  } catch (e) {
+    if (e.code === 'MODULE_NOT_FOUND') {
+      exit(`Error: Could not find router at ${process.cwd() + '/' + routerPath}`)
+    }
+  }
+}
 
 async function generate () {
+  const mount = getMount()
+
   await generateTypes(mount, process.cwd() + '/' + contractPath)
 
   const { stdout } = await promisify(exec)(`git diff ${contractPath}`)
