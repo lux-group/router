@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/brandsExclusive/router.git"
+    "url": "git+https://github.com/lux-group/router.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/brandsExclusive/router/issues"
+    "url": "https://github.com/lux-group/router/issues"
   },
-  "homepage": "https://github.com/brandsExclusive/router#readme",
+  "homepage": "https://github.com/lux-group/router#readme",
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
@@ -29,6 +29,8 @@
     "express": "^4.17.1",
     "mocha": "^9.0.2",
     "openapi-schema-validator": "^9.3.1",
+    "openapi-typescript": "^4.4.0",
+    "openapi-typescript-codegen": "^0.13.0",
     "sinon": "^7.5.0",
     "snazzy": "^8.0.0",
     "standard": "^12.0.1",
@@ -41,7 +43,6 @@
   "dependencies": {
     "@luxuryescapes/strummer": "^2.11.3",
     "@sentry/node": "^6.8.0",
-    "openapi-typescript": "^4.4.0",
     "swagger-ui-express": "^4.0.6"
   },
   "standard": {
