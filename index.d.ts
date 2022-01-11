@@ -1,10 +1,13 @@
+
 declare module "@luxuryescapes/router" {
-  import { Request, Response, Express, NextFunction, Handler as ExpressHandler, RequestHandler } from "express";
+  import { Request as ExpressRequest, Response, Express, NextFunction, Handler as ExpressHandler, RequestHandler } from "express";
   import { Matcher } from "@luxuryescapes/strummer"
+  import { ParamsDictionary } from 'express-serve-static-core';
+  import { ParsedQs } from "qs";
 
   export function errorHandler(
     err: Error,
-    req: Request,
+    req: ExpressRequest,
     res: Response,
     next: NextFunction
   ): void;
@@ -32,7 +35,7 @@ declare module "@luxuryescapes/router" {
   interface RouterConfig {
     validateResponses?: boolean;
     logRequests?: boolean;
-    correlationIdExtractor?: (req: Request, res: Response) => string;
+    correlationIdExtractor?: (req: ExpressRequest, res: Response) => string;
     logger?: Logger;
     sentryDSN?: string;
     appEnv?: AppEnv;
@@ -74,7 +77,7 @@ declare module "@luxuryescapes/router" {
     schema?: RouteSchema;
     isPublic?: boolean;
     preHandlers?: ExpressHandler[];
-    handlers: RequestHandler<any, any, any, any>[];
+    handlers: ((req: any, res: Response, next: NextFunction) => void)[]
     tags?: string[];
     summary?: string;
     description?: string;
@@ -142,26 +145,46 @@ declare module "@luxuryescapes/router" {
     O extends keyof operations,
     Response = operations[O]["responses"]
   > = Response[keyof Response] extends Schema<infer S> ? S : never;
+
+  type Jwt = {
+    sub: string
+    jti: string,
+    iat: number,
+    iss: string,
+    exp: number,
+    sut: boolean,
+    roles: string[]
+  }
+
+  interface AuthenticatedRequest<P = ParamsDictionary, ResBody = any, ReqBody = any, ReqQuery = ParsedQs>
+    extends ExpressRequest<P, ResBody, ReqBody, ReqQuery> {
+      jwt: Jwt;
+      user: unknown;
+    }
   
   export interface Handler<
     operations extends Record<string, any>,
     O extends keyof operations,
     R = ResBody<operations, O>,
-    parameters = operations[O]["parameters"]
+    parameters = operations[O]["parameters"],
+    PathParams = parameters extends { path: any }
+      ? parameters["path"]
+      : Record<string, never>,
+    ReqBody = parameters extends { body: { payload: any } }
+      ? parameters["body"]["payload"]
+      : Record<string, never>,
+    Query = parameters extends { query: any }
+      ? parameters["query"]
+      : Record<string, never>,
+    header = parameters extends { header: any } ?
+      parameters['header']:
+      Record<string, never>,
+    Request = header extends { Cookie: any } ?
+      AuthenticatedRequest<PathParams, R, ReqBody, Query> :
+      ExpressRequest<PathParams, R, ReqBody, Query>
   > {
     (
-      req: Request<
-        parameters extends { path: any }
-          ? parameters["path"]
-          : Record<string, never>,
-        R,
-        parameters extends { body: { payload: any } }
-          ? parameters["body"]["payload"]
-          : Record<string, never>,
-        parameters extends { query: any }
-          ? parameters["query"]
-          : Record<string, never>
-      >,
+      req: Request,
       res: Response<R>,
       next: NextFunction
     ): void | Promise<void>;
