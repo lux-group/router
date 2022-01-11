@@ -1,4 +1,3 @@
-
 declare module "@luxuryescapes/router" {
   import { Request as ExpressRequest, Response, Express, NextFunction, Handler as ExpressHandler, RequestHandler } from "express";
   import { Matcher } from "@luxuryescapes/strummer"
