@@ -151,7 +151,7 @@ describe('router', () => {
     describe('when disabled', () => {
       let logger
       beforeEach(async () => {
-        logger = { log: sinon.stub(), warn: sinon.stub() }
+        logger = { info: sinon.stub(), warn: sinon.stub() }
         return setupRoutes({ opts: { logRequests: false, logger } })
       })
 
@@ -163,14 +163,14 @@ describe('router', () => {
           })
 
         expect(response.status).to.eql(201)
-        sinon.assert.notCalled(logger.log)
+        sinon.assert.notCalled(logger.info)
       })
     })
 
     describe('when enabled', () => {
       let logger
       beforeEach(async () => {
-        logger = { log: sinon.stub(), warn: sinon.stub() }
+        logger = { info: sinon.stub(), warn: sinon.stub() }
         sinon.stub(uuid, 'get').returns('stubbeduuid')
         return setupRoutes({ opts: { logRequests: true, logger } })
       })
@@ -187,16 +187,16 @@ describe('router', () => {
           })
 
         expect(response.status).to.eql(201)
-        sinon.assert.calledTwice(logger.log)
-        sinon.assert.calledWith(logger.log, sinon.match('request: (stubbeduuid)'))
-        sinon.assert.calledWith(logger.log, sinon.match('response: (stubbeduuid)'))
+        sinon.assert.calledTwice(logger.info)
+        sinon.assert.calledWith(logger.info, sinon.match('request: (stubbeduuid)'))
+        sinon.assert.calledWith(logger.info, sinon.match('response: (stubbeduuid)'))
       })
     })
 
     describe('when using correlationIdExtractor', () => {
       let logger
       beforeEach(async () => {
-        logger = { log: sinon.stub(), warn: sinon.stub() }
+        logger = { info: sinon.stub(), warn: sinon.stub() }
         return setupRoutes({ opts: { logRequests: true, logger, correlationIdExtractor: (req, res) => req.params.id } })
       })
 
@@ -208,8 +208,8 @@ describe('router', () => {
           })
 
         expect(response.status).to.eql(201)
-        sinon.assert.calledWith(logger.log, sinon.match('request: (123)'))
-        sinon.assert.calledWith(logger.log, sinon.match('response: (123)'))
+        sinon.assert.calledWith(logger.info, sinon.match('request: (123)'))
+        sinon.assert.calledWith(logger.info, sinon.match('response: (123)'))
       })
     })
   })
