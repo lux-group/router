@@ -30,6 +30,10 @@ const getMount = () => {
     if (e.code === 'MODULE_NOT_FOUND') {
       exit(`Error: Could not find router at ${process.cwd() + '/' + routerPath}`)
     }
+    if (e instanceof ReferenceError) {
+      console.error(e)
+      exit(`Error: Could not generate types due to syntax issues.`)
+    }
   }
 }
 
