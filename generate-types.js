@@ -28,7 +28,7 @@ const getMount = () => {
     return mount
   } catch (e) {
     if (e.code === 'MODULE_NOT_FOUND') {
-      exit(`Error: Could not find router at ${process.cwd() + '/' + routerPath}`)
+      exit(e.message)
     }
     if (e instanceof ReferenceError) {
       console.error(e)
