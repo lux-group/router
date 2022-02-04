@@ -13,15 +13,15 @@ const exit = (message) => {
 
 const routerPath = process.argv[2]
 if (!routerPath) {
-  exit('Usage: yarn generateTypes <path-to-router> <path-to-contract> [<path-to-contract-directory>]')
+  exit('Usage: yarn generateTypes <path-to-router> <path-to-contract>')
 }
 
 const contractPath = process.argv[3]
 if (!contractPath) {
-  exit('Usage: yarn generateTypes <path-to-router> <path-to-contract> [<path-to-contract-directory>]')
+  exit('Usage: yarn generateTypes <path-to-router> <path-to-contract>')
 }
 
-let contractDirectoryPath = process.argv[4]
+const isCI = process.argv[4] === '--ci'
 
 const readline = require('readline');
 const rl = readline.createInterface({
@@ -58,11 +58,10 @@ async function generate () {
   if (pendingCommits) {
     console.log('Types have changed since the last commit.')
     console.log(stdout)
+    
+    if(isCI) return;
 
-    if (!contractDirectoryPath) {
-      contractDirectoryPath = contractPath.substring(0, contractPath.lastIndexOf("/"));
-      console.log(`path-to-contract-directory not set, resolving to parent folder of contract: ${contractDirectoryPath}`)
-    }
+    const contractDirectoryPath = contractPath.substring(0, contractPath.lastIndexOf("/"));
 
     var pjson = require(process.cwd() + '/' + contractDirectoryPath + '/package.json');
     const response = await new Promise(resolve => {
@@ -84,7 +83,7 @@ async function generate () {
 
 generate()
   .then((pendingCommits) => {
-    const exitCode = process.argv[4] === '--ci' && pendingCommits ? 1 : 0
+    const exitCode = isCI && pendingCommits ? 1 : 0
     process.exit(exitCode)
   })
   .catch((e) => {
