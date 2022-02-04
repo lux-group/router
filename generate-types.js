@@ -13,16 +13,22 @@ const exit = (message) => {
 
 const routerPath = process.argv[2]
 if (!routerPath) {
-  exit('Usage: yarn generateTypes <path-to-router> <path-to-contract> [<should-increment-version>] [<path-to-contract-directory>]')
+  exit('Usage: yarn generateTypes <path-to-router> <path-to-contract> [<path-to-contract-directory>]')
 }
 
 const contractPath = process.argv[3]
 if (!contractPath) {
-  exit('Usage: yarn generateTypes <path-to-router> <path-to-contract> [<should-increment-version>] [<path-to-contract-directory>]')
+  exit('Usage: yarn generateTypes <path-to-router> <path-to-contract> [<path-to-contract-directory>]')
 }
 
-const shouldIncrementVersion = process.argv[4]
-let contractDirectoryPath = process.argv[5]
+let contractDirectoryPath = process.argv[4]
+
+const readline = require('readline');
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
 
 const getMount = () => {
   try {
@@ -51,19 +57,23 @@ async function generate () {
 
   if (pendingCommits) {
     console.log('Types have changed since the last commit.')
-    if (shouldIncrementVersion) {
+    console.log(stdout)
+
+    if (!contractDirectoryPath) {
+      contractDirectoryPath = contractPath.substring(0, contractPath.lastIndexOf("/"));
+      console.log(`path-to-contract-directory not set, resolving to parent folder of contract: ${contractDirectoryPath}`)
+    }
+
+    var pjson = require(process.cwd() + '/' + contractDirectoryPath + '/package.json');
+    const response = await new Promise(resolve => {
+      rl.question(`Currrent contract version is ${pjson.version} - Do you want to increment the version ?  (Y/n)`, resolve)
+    })
+    rl.close()
+    if(!response || response == 'y' || response == 'Y') {
       console.log('Attempting to increment package version.')
-      if (!contractDirectoryPath) {
-        contractDirectoryPath = contractPath.substring(0, contractPath.lastIndexOf("/"));
-        console.log(`path-to-contract-directory not set, resolving to parent folder of contract: ${contractDirectoryPath}`)
-      }
       const result = await promisify(exec)(`npm --prefix ${contractDirectoryPath} --no-git-tag-version version patch`)
       console.log('Package version incremented to ' + result.stdout)
-    } else {
-      console.log('Please increment your contract package version.')
     }
-    
-    console.log(stdout)
   } else {
     console.log('No changes.')
   }
