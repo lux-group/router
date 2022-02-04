@@ -13,13 +13,16 @@ const exit = (message) => {
 
 const routerPath = process.argv[2]
 if (!routerPath) {
-  exit('Usage: yarn generateTypes <path-to-router> <path-to-contract>')
+  exit('Usage: yarn generateTypes <path-to-router> <path-to-contract> [<should-increment-version>] [<path-to-contract-directory>]')
 }
 
 const contractPath = process.argv[3]
 if (!contractPath) {
-  exit('Usage: yarn generateTypes <path-to-router> <path-to-contract>')
+  exit('Usage: yarn generateTypes <path-to-router> <path-to-contract> [<should-increment-version>] [<path-to-contract-directory>]')
 }
+
+const shouldIncrementVersion = process.argv[4]
+let contractDirectoryPath = process.argv[5]
 
 const getMount = () => {
   try {
@@ -47,11 +50,24 @@ async function generate () {
   const pendingCommits = !!stdout
 
   if (pendingCommits) {
-    console.log('Types has changed since the last commit.')
+    console.log('Types have changed since the last commit.')
+    if (shouldIncrementVersion) {
+      console.log('Attempting to increment package version.')
+      if (!contractDirectoryPath) {
+        contractDirectoryPath = contractPath.substring(0, contractPath.lastIndexOf("/"));
+        console.log(`path-to-contract-directory not set, resolving to parent folder of contract: ${contractDirectoryPath}`)
+      }
+      const result = await promisify(exec)(`npm --prefix ${contractDirectoryPath} --no-git-tag-version version patch`)
+      console.log('Package version incremented to ' + result.stdout)
+    } else {
+      console.log('Please increment your contract package version.')
+    }
+    
     console.log(stdout)
   } else {
     console.log('No changes.')
   }
+
 
   return !!pendingCommits
 }
