@@ -23,12 +23,6 @@ if (!contractPath) {
 
 const isCI = process.argv[4] === '--ci'
 
-const readline = require('readline')
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-})
-
 const getMount = () => {
   try {
     const { mount } = require(process.cwd() + '/' + routerPath)
@@ -63,15 +57,10 @@ async function generate () {
     const contractDirectoryPath = contractPath.substring(0, contractPath.lastIndexOf('/'))
 
     var pjson = require(process.cwd() + '/' + contractDirectoryPath + '/package.json')
-    const response = await new Promise(resolve => {
-      rl.question(`Currrent contract version is ${pjson.version} - Do you want to increment the version ?  (Y/n)`, resolve)
-    })
-    rl.close()
-    if (!response || response === 'y' || response === 'Y') {
-      console.log('Attempting to increment package version.')
-      const result = await promisify(exec)(`npm --prefix ${contractDirectoryPath} --no-git-tag-version version patch`)
-      console.log('Package version incremented to ' + result.stdout)
-    }
+
+    console.log(`Currrent contract version is ${pjson.version}. Attempting to increment package version.`)
+    const result = await promisify(exec)(`npm --prefix ${contractDirectoryPath} --no-git-tag-version version patch`)
+    console.log('Package version incremented to ' + result.stdout)
   } else {
     console.log('No changes.')
   }
