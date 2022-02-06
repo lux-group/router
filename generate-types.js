@@ -21,6 +21,8 @@ if (!contractPath) {
   exit('Usage: yarn generateTypes <path-to-router> <path-to-contract>')
 }
 
+const isCI = process.argv[4] === '--ci'
+
 const getMount = () => {
   try {
     const { mount } = require(process.cwd() + '/' + routerPath)
@@ -47,8 +49,18 @@ async function generate () {
   const pendingCommits = !!stdout
 
   if (pendingCommits) {
-    console.log('Types has changed since the last commit.')
+    console.log('Types have changed since the last commit.')
     console.log(stdout)
+
+    if (isCI) return
+
+    const contractDirectoryPath = contractPath.substring(0, contractPath.lastIndexOf('/'))
+
+    var pjson = require(process.cwd() + '/' + contractDirectoryPath + '/package.json')
+
+    console.log(`Currrent contract version is ${pjson.version}. Attempting to increment package version.`)
+    const result = await promisify(exec)(`npm --prefix ${contractDirectoryPath} --no-git-tag-version version patch`)
+    console.log('Package version incremented to ' + result.stdout)
   } else {
     console.log('No changes.')
   }
@@ -58,7 +70,7 @@ async function generate () {
 
 generate()
   .then((pendingCommits) => {
-    const exitCode = process.argv[4] === '--ci' && pendingCommits ? 1 : 0
+    const exitCode = isCI && pendingCommits ? 1 : 0
     process.exit(exitCode)
   })
   .catch((e) => {
