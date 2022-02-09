@@ -32,10 +32,7 @@ const getMount = () => {
     if (e.code === 'MODULE_NOT_FOUND') {
       exit(e.message)
     }
-    if (e instanceof ReferenceError) {
-      console.error(e)
-      exit(`Error: Could not generate types due to syntax issues.`)
-    }
+    throw e
   }
 }
 
