@@ -168,17 +168,17 @@ declare module "@luxuryescapes/router" {
     parameters = operations[O]["parameters"],
     PathParams = parameters extends { path: any }
       ? parameters["path"]
-      : Record<string, never>,
+      : {},
     ReqBody = parameters extends { body: { payload: any } }
       ? parameters["body"]["payload"]
-      : Record<string, never>,
+      : {},
     Query = parameters extends { query: any }
       ? parameters["query"]
-      : Record<string, never>,
-    header = parameters extends { header: any } ?
-      parameters['header']:
-      Record<string, never>,
-    Request = header extends { Cookie: any } ?
+      : {},
+    Header = parameters extends { header: any }
+      ? parameters['header']
+      : {},
+    Request = Header extends { Cookie: any } ?
       AuthenticatedRequest<PathParams, R, ReqBody, Query> :
       ExpressRequest<PathParams, R, ReqBody, Query>
   > {
