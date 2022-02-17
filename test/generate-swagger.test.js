@@ -1,4 +1,3 @@
-const { expect } = require('chai')
 const s = require('@luxuryescapes/strummer')
 const OpenAPISchemaValidator = require('openapi-schema-validator').default
 
@@ -46,7 +45,7 @@ describe('generateSwagger', () => {
     })
     const swagger = generateSwagger(buildRouteDefinitions({ response }), baseProperties)
 
-    expect(swagger.paths['/']['get']['responses']['200']['content']['application/json']['schema']).to.eql({
+    expect(swagger.paths['/']['get']['responses']['200']['content']['application/json']['schema']).toEqual({
       properties: {
         packages: {
           additionalProperties: { $ref: '#/components/schemas/package' },
@@ -59,7 +58,7 @@ describe('generateSwagger', () => {
       type: 'object'
     })
 
-    expect(swagger.components.schemas).to.eql({
+    expect(swagger.components.schemas).toEqual({
       package: {
         properties: {
           id: {
@@ -94,7 +93,7 @@ describe('generateSwagger', () => {
 
     const swagger = generateSwagger(buildRouteDefinitions({ response }), baseProperties)
 
-    expect(swagger.paths['/']['get']['responses']['200']['content']['application/json']['schema']).to.eql({
+    expect(swagger.paths['/']['get']['responses']['200']['content']['application/json']['schema']).toEqual({
       additionalProperties: false,
       properties: {
         packages: {
@@ -117,7 +116,7 @@ describe('generateSwagger', () => {
       type: 'object'
     })
 
-    expect(swagger.components.schemas).to.eql({})
+    expect(swagger.components.schemas).toEqual({})
   })
 
   it('creates definitions for one of', () => {
@@ -126,7 +125,7 @@ describe('generateSwagger', () => {
 
     expect(
       swagger.paths['/']['get']['responses']['200']['content']['application/json']['schema']['properties']
-    ).to.eql({
+    ).toEqual({
       x: {
         oneOf: [
           { $ref: '#/components/schemas/hotel' },
@@ -136,7 +135,7 @@ describe('generateSwagger', () => {
       }
     })
 
-    expect(swagger.components.schemas).to.eql({
+    expect(swagger.components.schemas).toEqual({
       hotel: {
         properties: {
           id: {
@@ -167,7 +166,7 @@ describe('generateSwagger', () => {
     })
     const swagger = generateSwagger(buildRouteDefinitions({ response }), baseProperties)
 
-    expect(swagger.components.schemas).to.eql({
+    expect(swagger.components.schemas).toEqual({
       package: {
         properties: {
           id: {
@@ -194,7 +193,7 @@ describe('generateSwagger', () => {
       }
     })
 
-    expect(swagger.paths['/']['get']['responses']['200']['content']['application/json']).to.eql({
+    expect(swagger.paths['/']['get']['responses']['200']['content']['application/json']).toEqual({
       schema: {
         properties: {
           id: {
@@ -241,7 +240,7 @@ describe('generateSwagger', () => {
       {}
     )
 
-    expect(swagger.components.schemas).to.eql({
+    expect(swagger.components.schemas).toEqual({
       'rate': {
         'type': 'object',
         'properties': {
@@ -299,7 +298,7 @@ describe('generateSwagger', () => {
       }
     })
 
-    expect(swagger.paths['/']['get']['responses']['200']['content']['application/json']).to.eql({
+    expect(swagger.paths['/']['get']['responses']['200']['content']['application/json']).toEqual({
       'schema': { '$ref': '#/definitions/rate' }
     })
   })
@@ -310,7 +309,7 @@ describe('generateSwagger', () => {
       baseProperties
     )
 
-    expect(swagger.paths['/']['get'].parameters[0]).to.eql({
+    expect(swagger.paths['/']['get'].parameters[0]).toEqual({
       'in': 'query',
       'name': 'page',
       'required': true,
@@ -328,7 +327,7 @@ describe('generateSwagger', () => {
       baseProperties
     )
 
-    expect(swagger.paths['/']['get'].parameters[0]).to.eql({
+    expect(swagger.paths['/']['get'].parameters[0]).toEqual({
       'in': 'query',
       'name': 'region',
       'required': true,
@@ -346,7 +345,7 @@ describe('generateSwagger', () => {
       baseProperties
     )
 
-    expect(swagger.paths['/']['get'].parameters[0]).to.eql({
+    expect(swagger.paths['/']['get'].parameters[0]).toEqual({
       'in': 'query',
       'name': 'ids',
       'required': true,
@@ -367,7 +366,7 @@ describe('generateSwagger', () => {
       baseProperties
     )
 
-    expect(swagger.paths['/']['get'].parameters[0]).to.eql({
+    expect(swagger.paths['/']['get'].parameters[0]).toEqual({
       'in': 'query',
       'name': 'ids',
       'required': true,
@@ -391,7 +390,7 @@ describe('generateSwagger', () => {
       baseProperties
     )
 
-    expect(swagger.components.schemas).to.eql({
+    expect(swagger.components.schemas).toEqual({
       'region': {
         'enum': [
           'AU',
@@ -400,7 +399,7 @@ describe('generateSwagger', () => {
       }
     })
 
-    expect(swagger.paths['/'].get.parameters[0]).to.deep.equal({
+    expect(swagger.paths['/'].get.parameters[0]).toEqual({
       'in': 'query',
       'name': 'region',
       'required': true,
@@ -420,7 +419,7 @@ describe('generateSwagger', () => {
       baseProperties
     )
 
-    expect(swagger.paths['/']['get'].parameters[0]).to.eql({
+    expect(swagger.paths['/']['get'].parameters[0]).toEqual({
       'in': 'path',
       'name': 'id',
       'required': true,
@@ -449,6 +448,6 @@ describe('generateSwagger', () => {
       version: '3.0.3'
     })
     const result = validator.validate(swagger)
-    expect(result.errors).to.deep.equal([])
+    expect(result.errors).toEqual([])
   })
 })
