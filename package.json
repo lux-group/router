@@ -8,7 +8,7 @@
     "routerGenerateTypes": "generate-types.js"
   },
   "scripts": {
-    "test": "mocha --recursive",
+    "test": "jest",
     "lint": "standard | snazzy"
   },
   "repository": {
