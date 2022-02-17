@@ -1,9 +1,6 @@
-const chai = require('chai')
-const sinon = require('sinon')
 const express = require('express')
 const s = require('@luxuryescapes/strummer')
-
-const expect = chai.expect
+const request = require('supertest')
 
 const { router, errorHandler, errors } = require('../../index')
 const uuid = require('../../lib/utils/uuid')
@@ -24,14 +21,14 @@ const swaggerBaseProperties = {
   },
   host: 'https://myapi.com',
   basePath: '/',
-  tags: [{
-    name: 'Another tag'
-  }],
+  tags: [
+    {
+      name: 'Another tag'
+    }
+  ],
   consumes: ['application/json'],
   produces: ['application/json'],
-  schemes: [
-    'https'
-  ],
+  schemes: ['https'],
   paths: {},
   securityDefinitions: {},
   components: { schemas: {} }
@@ -40,7 +37,12 @@ const swaggerBaseProperties = {
 const schema = {
   request: {
     query: s.objectWithOnly({
-      hello: s.enum({ type: 'string', values: ['hi', 'hello'], verbose: true, description: 'Different ways to greet someone' }),
+      hello: s.enum({
+        type: 'string',
+        values: ['hi', 'hello'],
+        verbose: true,
+        description: 'Different ways to greet someone'
+      }),
       world: s.string({ min: 2, max: 4 }),
       foo: s.array({ of: s.string(), optional: true })
     }),
@@ -48,7 +50,11 @@ const schema = {
       id: s.integer({ parse: true })
     }),
     body: s.objectWithOnly({
-      action: s.enum({ values: ['create', 'update'], verbose: true, description: 'The action you want to perform' })
+      action: s.enum({
+        values: ['create', 'update'],
+        verbose: true,
+        description: 'The action you want to perform'
+      })
     })
   },
   responses: {
@@ -69,7 +75,7 @@ describe('router', () => {
   })
 
   afterEach(async () => {
-    return new Promise(resolve => app.close(resolve))
+    return new Promise((resolve) => app.close(resolve))
   })
 
   const genericHandler = async (req, res) => {
@@ -83,7 +89,11 @@ describe('router', () => {
   }
 
   const setupRoutes = async ({ handler, opts, routeOpts = {} } = {}) => {
-    routerInstance = router(server, { validateResponses: true, swaggerBaseProperties, ...opts })
+    routerInstance = router(server, {
+      validateResponses: true,
+      swaggerBaseProperties,
+      ...opts
+    })
     routerInstance.put({
       url: '/api/something/:id',
       schema,
@@ -100,7 +110,7 @@ describe('router', () => {
     })
     routerInstance.serveSwagger('/docs')
     server.use(errorHandler)
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       app = server.listen(resolve)
     })
   }
@@ -115,35 +125,38 @@ describe('router', () => {
         },
         opts: { validateResponses: false, swaggerBaseProperties },
         routeOpts: {
-          preHandlers: [(req, res, next) => {
-            req.userToken = 'abc'
-            next()
-          }]
+          preHandlers: [
+            (req, res, next) => {
+              req.userToken = 'abc'
+              next()
+            }
+          ]
         }
       })
     })
 
     it('pre handlers come first', async () => {
-      const response = await chai.request(app).put('/api/something/123')
+      const response = await request(app)
+        .put('/api/something/123')
         .query({ hello: 'hi', world: 'yes' })
         .send({
           action: 'create'
         })
 
-      expect(response.status).to.eql(201)
-      expect(response.body).to.eql({ id: 'abc' })
+      expect(response.status).toEqual(201)
+      expect(response.body).toEqual({ id: 'abc' })
     })
   })
 
   describe('non json requests', () => {
     beforeEach(() => setupRoutes())
     it('returns a successful response', async () => {
-      const response = await chai.request(app)
+      const response = await request(app)
         .post('/api/echo')
         .set('content-type', 'text/plain')
         .send('ABC')
-      expect(response.status).to.eql(200)
-      expect(response.body).to.eql({ body: 'ABC' })
+      expect(response.status).toEqual(200)
+      expect(response.body).toEqual({ body: 'ABC' })
     })
   })
 
@@ -151,65 +164,85 @@ describe('router', () => {
     describe('when disabled', () => {
       let logger
       beforeEach(async () => {
-        logger = { info: sinon.stub(), warn: sinon.stub() }
+        logger = { info: jest.fn(), warn: jest.fn() }
         return setupRoutes({ opts: { logRequests: false, logger } })
       })
 
       it('should not log', async () => {
-        const response = await chai.request(app).put('/api/something/123')
+        const response = await request(app)
+          .put('/api/something/123')
           .query({ hello: 'hi', world: 'yes' })
           .send({
             action: 'create'
           })
 
-        expect(response.status).to.eql(201)
-        sinon.assert.notCalled(logger.info)
+        expect(response.status).toEqual(201)
+        expect(logger.info).not.toHaveBeenCalled()
       })
     })
 
     describe('when enabled', () => {
       let logger
       beforeEach(async () => {
-        logger = { info: sinon.stub(), warn: sinon.stub() }
-        sinon.stub(uuid, 'get').returns('stubbeduuid')
+        logger = { info: jest.fn(), warn: jest.fn() }
+        jest.spyOn(uuid, 'get').mockReturnValue('stubbeduuid')
         return setupRoutes({ opts: { logRequests: true, logger } })
       })
 
-      afterEach(() => {
-        uuid.get.restore()
-      })
-
       it('should log', async () => {
-        const response = await chai.request(app).put('/api/something/123')
+        const response = await request(app)
+          .put('/api/something/123')
           .query({ hello: 'hi', world: 'yes' })
           .send({
             action: 'create'
           })
 
-        expect(response.status).to.eql(201)
-        sinon.assert.calledTwice(logger.info)
-        sinon.assert.calledWith(logger.info, sinon.match('request: (stubbeduuid)'))
-        sinon.assert.calledWith(logger.info, sinon.match('response: (stubbeduuid)'))
+        expect(response.status).toEqual(201)
+        expect(logger.info.mock.calls).toMatchInlineSnapshot(`
+          Array [
+            Array [
+              "request: (stubbeduuid) PUT /api/something/123?hello=hi&world=yes {\\"action\\":\\"create\\"}",
+            ],
+            Array [
+              "response: (stubbeduuid) 201: {\\"id\\":123}",
+            ],
+          ]
+        `)
       })
     })
 
     describe('when using correlationIdExtractor', () => {
       let logger
       beforeEach(async () => {
-        logger = { info: sinon.stub(), warn: sinon.stub() }
-        return setupRoutes({ opts: { logRequests: true, logger, correlationIdExtractor: (req, res) => req.params.id } })
+        logger = { info: jest.fn(), warn: jest.fn() }
+        return setupRoutes({
+          opts: {
+            logRequests: true,
+            logger,
+            correlationIdExtractor: (req, res) => req.params.id
+          }
+        })
       })
 
       it('should log with specified correlation id', async () => {
-        const response = await chai.request(app).put('/api/something/123')
+        const response = await request(app)
+          .put('/api/something/123')
           .query({ hello: 'hi', world: 'yes' })
           .send({
             action: 'create'
           })
 
-        expect(response.status).to.eql(201)
-        sinon.assert.calledWith(logger.info, sinon.match('request: (123)'))
-        sinon.assert.calledWith(logger.info, sinon.match('response: (123)'))
+        expect(response.status).toEqual(201)
+        expect(logger.info.mock.calls).toMatchInlineSnapshot(`
+          Array [
+            Array [
+              "request: (123) PUT /api/something/123?hello=hi&world=yes {\\"action\\":\\"create\\"}",
+            ],
+            Array [
+              "response: (123) 201: {\\"id\\":123}",
+            ],
+          ]
+        `)
       })
     })
   })
@@ -221,95 +254,112 @@ describe('router', () => {
       })
 
       it('should return if request is valid', async () => {
-        const response = await chai.request(app).put('/api/something/123')
+        const response = await request(app)
+          .put('/api/something/123')
           .query({ hello: 'hi', world: 'yes' })
           .send({
             action: 'create'
           })
 
-        expect(response.status).to.eql(201)
-        expect(response.body).to.eql({ id: 123 })
+        expect(response.status).toEqual(201)
+        expect(response.body).toEqual({ id: 123 })
       })
 
       it('should error if query params are invalid', async () => {
-        const response = await chai.request(app).put('/api/something/123')
+        const response = await request(app)
+          .put('/api/something/123')
           .query({ world: 'yes' })
           .send({
             action: 'create'
           })
 
-        expect(response.status).to.eql(400)
-        expect(response.body).to.eql({
+        expect(response.status).toEqual(400)
+        expect(response.body).toEqual({
           status: 400,
           message: 'Invalid url query parameters',
-          errors: [{
-            path: 'hello',
-            message: 'should be a valid enum value (hi,hello)'
-          }]
+          errors: [
+            {
+              path: 'hello',
+              message: 'should be a valid enum value (hi,hello)'
+            }
+          ]
         })
       })
 
       it('should error if params are invalid', async () => {
-        const response = await chai.request(app).put('/api/something/myid123')
+        const response = await request(app)
+          .put('/api/something/myid123')
           .query({ hello: 'hi', world: 'yes' })
           .send({
             action: 'create'
           })
 
-        expect(response.status).to.eql(400)
-        expect(response.body).to.eql({
+        expect(response.status).toEqual(400)
+        expect(response.body).toEqual({
           status: 400,
           message: 'Invalid url path parameters',
-          errors: [{
-            path: 'id',
-            message: 'should be an integer',
-            value: 'myid123'
-          }]
+          errors: [
+            {
+              path: 'id',
+              message: 'should be an integer',
+              value: 'myid123'
+            }
+          ]
         })
       })
 
       it('should error if payload is invalid', async () => {
-        const response = await chai.request(app).put('/api/something/123')
+        const response = await request(app)
+          .put('/api/something/123')
           .query({ hello: 'hi', world: 'yes' })
           .send({
             action: 'delete'
           })
 
-        expect(response.status).to.eql(400)
-        expect(response.body).to.eql({
+        expect(response.status).toEqual(400)
+        expect(response.body).toEqual({
           status: 400,
           message: 'Invalid payload',
-          errors: [{
-            path: 'action',
-            message: 'should be a valid enum value (create,update)',
-            value: 'delete'
-          }]
+          errors: [
+            {
+              path: 'action',
+              message: 'should be a valid enum value (create,update)',
+              value: 'delete'
+            }
+          ]
         })
       })
     })
 
     describe('when on warn mode', () => {
       beforeEach(async () => {
-        return setupRoutes({ routeOpts: { warnOnRequestValidationError: true } })
+        return setupRoutes({
+          routeOpts: { warnOnRequestValidationError: true }
+        })
       })
 
       it('should not error if query params are invalid', async () => {
-        const response = await chai.request(app).put('/api/something/123')
+        const response = await request(app)
+          .put('/api/something/123')
           .query({ world: 'yes' })
           .send({
             action: 'create'
           })
 
-        expect(response.status).to.eql(201)
-        expect(response.body).to.eql({ id: 123 })
+        expect(response.status).toEqual(201)
+        expect(response.body).toEqual({ id: 123 })
       })
     })
 
     describe('when an operationId is given', () => {
-      beforeEach(() => setupRoutes({ routeOpts: { operationId: 'updateSomething' } }))
+      beforeEach(() =>
+        setupRoutes({ routeOpts: { operationId: 'updateSomething' } })
+      )
 
       it('sets the operationId', () => {
-        expect(routerInstance.toSwagger().paths['/api/something/{id}']['put']['operationId']).to.eql('updateSomething')
+        expect(
+          routerInstance.toSwagger().paths['/api/something/{id}']['put']['operationId']
+        ).toEqual('updateSomething')
       })
     })
 
@@ -317,7 +367,9 @@ describe('router', () => {
       beforeEach(() => setupRoutes())
 
       it('generates an operationId', () => {
-        expect(routerInstance.toSwagger().paths['/api/something/{id}']['put']['operationId']).to.eql('/api/something/{id}/put')
+        expect(
+          routerInstance.toSwagger().paths['/api/something/{id}']['put']['operationId']
+        ).toEqual('/api/something/{id}/put')
       })
     })
   })
@@ -347,46 +399,51 @@ describe('router', () => {
       })
 
       it('should error if response structure is incorrect', async () => {
-        const response = await chai.request(app).put('/api/something/456')
+        const response = await request(app)
+          .put('/api/something/456')
           .query({ hello: 'hi', world: 'yes' })
           .send({
             action: 'create'
           })
 
-        expect(response.status).to.eql(500)
-        expect(response.body).to.eql({
+        expect(response.status).toEqual(500)
+        expect(response.body).toEqual({
           status: 500,
           message: 'Response body does not match the specified schema',
-          errors: [{
-            path: 'extraField',
-            message: 'should not exist',
-            value: 'shouldnotbehere'
-          }]
+          errors: [
+            {
+              path: 'extraField',
+              message: 'should not exist',
+              value: 'shouldnotbehere'
+            }
+          ]
         })
       })
 
       it('should return if status code not mapped', async () => {
-        const response = await chai.request(app).put('/api/something/789')
+        const response = await request(app)
+          .put('/api/something/789')
           .query({ hello: 'hi', world: 'yes' })
           .send({
             action: 'create'
           })
 
-        expect(response.status).to.eql(200)
-        expect(response.body).to.eql({
+        expect(response.status).toEqual(200)
+        expect(response.body).toEqual({
           id: 789,
           thiswonterror: 'cos it is not validated'
         })
       })
       it('should return if response structure is valid', async () => {
-        const response = await chai.request(app).put('/api/something/123')
+        const response = await request(app)
+          .put('/api/something/123')
           .query({ hello: 'hi', world: 'yes' })
           .send({
             action: 'create'
           })
 
-        expect(response.status).to.eql(201)
-        expect(response.body).to.eql({
+        expect(response.status).toEqual(201)
+        expect(response.body).toEqual({
           id: 123
         })
       })
@@ -405,14 +462,15 @@ describe('router', () => {
       })
 
       it('should return because it is not validated', async () => {
-        const response = await chai.request(app).put('/api/something/123')
+        const response = await request(app)
+          .put('/api/something/123')
           .query({ hello: 'hi', world: 'yes' })
           .send({
             action: 'create'
           })
 
-        expect(response.status).to.eql(201)
-        expect(response.body).to.eql({
+        expect(response.status).toEqual(201)
+        expect(response.body).toEqual({
           id: 123,
           extraField: 'shouldnotbehere'
         })
@@ -426,7 +484,7 @@ describe('router', () => {
     })
 
     it('should generate swagger', () => {
-      expect(routerInstance.toSwagger()).to.deep.equal({
+      expect(routerInstance.toSwagger()).toEqual({
         openapi: '3.0.3',
         info: {
           description: 'This is my api',
@@ -441,10 +499,7 @@ describe('router', () => {
         },
         host: 'https://myapi.com',
         basePath: '/',
-        tags: [
-          { name: 'Another tag' },
-          { name: 'Something' }
-        ],
+        tags: [{ name: 'Another tag' }, { name: 'Something' }],
         consumes: ['application/json'],
         produces: ['application/json'],
         schemes: ['https'],
@@ -471,7 +526,12 @@ describe('router', () => {
                 }
               },
               parameters: [
-                { name: 'id', in: 'path', required: true, schema: { type: 'integer' } },
+                {
+                  name: 'id',
+                  in: 'path',
+                  required: true,
+                  schema: { type: 'integer' }
+                },
                 {
                   name: 'hello',
                   in: 'query',
@@ -479,15 +539,30 @@ describe('router', () => {
                   description: 'Different ways to greet someone',
                   schema: { enum: ['hi', 'hello'], type: 'string' }
                 },
-                { name: 'world', in: 'query', required: true, schema: { type: 'string', maxLength: 4, minLength: 2 } },
-                { name: 'foo', in: 'query', required: false, schema: { type: 'array', items: { 'type': 'string' } } },
+                {
+                  name: 'world',
+                  in: 'query',
+                  required: true,
+                  schema: { type: 'string', maxLength: 4, minLength: 2 }
+                },
+                {
+                  name: 'foo',
+                  in: 'query',
+                  required: false,
+                  schema: { type: 'array', items: { type: 'string' } }
+                },
                 {
                   name: 'payload',
                   in: 'body',
                   required: true,
                   schema: {
                     type: 'object',
-                    properties: { action: { enum: ['create', 'update'], description: 'The action you want to perform' } },
+                    properties: {
+                      action: {
+                        enum: ['create', 'update'],
+                        description: 'The action you want to perform'
+                      }
+                    },
                     required: ['action'],
                     additionalProperties: false
                   }
@@ -508,8 +583,8 @@ describe('router', () => {
     })
 
     it('should serve swagger ui with swagger definition', async () => {
-      const response = await chai.request(app).get('/docs')
-      expect(response).to.be.html()
+      const response = await request(app).get('/docs/')
+      expect(response.text).toMatch(/Swagger UI/)
     })
   })
 
@@ -518,10 +593,12 @@ describe('router', () => {
       return setupRoutes({
         handler: async (req, res) => {
           if (req.params.id === '456') {
-            throw new errors.UnprocessableEntityError('Unprocessable yo', [{
-              path: 'something',
-              message: 'hahahehe'
-            }])
+            throw new errors.UnprocessableEntityError('Unprocessable yo', [
+              {
+                path: 'something',
+                message: 'hahahehe'
+              }
+            ])
           }
           if (req.params.id === '789') {
             throw new Error('Unknown error', [])
@@ -534,32 +611,36 @@ describe('router', () => {
     })
 
     it('should handle known errors that are thrown', async () => {
-      const response = await chai.request(app).put('/api/something/456')
+      const response = await request(app)
+        .put('/api/something/456')
         .query({ hello: 'hi', world: 'yes' })
         .send({
           action: 'create'
         })
 
-      expect(response.status).to.eql(422)
-      expect(response.body).to.eql({
+      expect(response.status).toEqual(422)
+      expect(response.body).toEqual({
         status: 422,
         message: 'Unprocessable yo',
-        errors: [{
-          path: 'something',
-          message: 'hahahehe'
-        }]
+        errors: [
+          {
+            path: 'something',
+            message: 'hahahehe'
+          }
+        ]
       })
     })
 
     it('should coerce unknown errors to a 500', async () => {
-      const response = await chai.request(app).put('/api/something/789')
+      const response = await request(app)
+        .put('/api/something/789')
         .query({ hello: 'hi', world: 'yes' })
         .send({
           action: 'create'
         })
 
-      expect(response.status).to.eql(500)
-      expect(response.body).to.eql({
+      expect(response.status).toEqual(500)
+      expect(response.body).toEqual({
         status: 500,
         message: 'Unknown error',
         errors: ['Unknown error']
