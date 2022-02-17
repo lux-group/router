@@ -1,0 +1,141 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`router toSwagger should generate swagger 1`] = `
+Object {
+  "basePath": "/",
+  "components": Object {
+    "schemas": Object {},
+  },
+  "consumes": Array [
+    "application/json",
+  ],
+  "host": "https://myapi.com",
+  "info": Object {
+    "contact": Object {
+      "email": "hi@hi.com",
+    },
+    "description": "This is my api",
+    "license": Object {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html",
+    },
+    "termsOfService": null,
+    "title": "My api",
+    "version": "1.0.0",
+  },
+  "openapi": "3.0.3",
+  "paths": Object {
+    "/api/something/{id}": Object {
+      "put": Object {
+        "description": "This route does something",
+        "operationId": "/api/something/{id}/put",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": Object {
+              "type": "integer",
+            },
+          },
+          Object {
+            "description": "Different ways to greet someone",
+            "in": "query",
+            "name": "hello",
+            "required": true,
+            "schema": Object {
+              "enum": Array [
+                "hi",
+                "hello",
+              ],
+              "type": "string",
+            },
+          },
+          Object {
+            "in": "query",
+            "name": "world",
+            "required": true,
+            "schema": Object {
+              "maxLength": 4,
+              "minLength": 2,
+              "type": "string",
+            },
+          },
+          Object {
+            "in": "query",
+            "name": "foo",
+            "required": false,
+            "schema": Object {
+              "items": Object {
+                "type": "string",
+              },
+              "type": "array",
+            },
+          },
+          Object {
+            "in": "body",
+            "name": "payload",
+            "required": true,
+            "schema": Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "action": Object {
+                  "description": "The action you want to perform",
+                  "enum": Array [
+                    "create",
+                    "update",
+                  ],
+                },
+              },
+              "required": Array [
+                "action",
+              ],
+              "type": "object",
+            },
+          },
+        ],
+        "responses": Object {
+          "201": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "additionalProperties": false,
+                  "properties": Object {
+                    "id": Object {
+                      "type": "integer",
+                    },
+                  },
+                  "required": Array [
+                    "id",
+                  ],
+                  "type": "object",
+                },
+              },
+            },
+            "description": "201 response",
+          },
+        },
+        "summary": "This route is about something",
+        "tags": Array [
+          "Something",
+        ],
+      },
+    },
+  },
+  "produces": Array [
+    "application/json",
+  ],
+  "schemes": Array [
+    "https",
+  ],
+  "securityDefinitions": Object {},
+  "tags": Array [
+    Object {
+      "name": "Another tag",
+    },
+    Object {
+      "name": "Something",
+    },
+  ],
+}
+`;
