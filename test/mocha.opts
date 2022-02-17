@@ -1,4 +1,0 @@
---recursive
---timeout 30000
---require test/support/test-helper.js
---bail
