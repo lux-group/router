@@ -27,6 +27,7 @@
     "@types/node": "^17.0.8",
     "express": "^4.17.1",
     "jest": "^27.5.1",
+    "lodash.omit": "^4.5.0",
     "openapi-schema-validator": "^9.3.1",
     "qs": "^6.10.3",
     "snazzy": "^8.0.0",

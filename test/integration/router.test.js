@@ -59,7 +59,13 @@ const schema = {
   },
   responses: {
     201: s.objectWithOnly({
-      id: s.integer()
+      id: s.integer(),
+      item: s.optional(
+        s.oneOf([
+          s('itemA', s.objectWithOnly({ id: s.integer() })),
+          s('itemB', s.objectWithOnly({ id: s.integer() }))
+        ])
+      )
     })
   }
 }
@@ -88,7 +94,7 @@ describe('router', () => {
     res.status(200).json({ body: req.body })
   }
 
-  const setupRoutes = async ({ handler, opts, routeOpts = {} } = {}) => {
+  const setupRoutes = ({ handler, opts, routeOpts = {} } = {}) => {
     routerInstance = router(server, {
       validateResponses: true,
       swaggerBaseProperties,
@@ -479,12 +485,15 @@ describe('router', () => {
   })
 
   describe('toSwagger', () => {
-    beforeEach(async () => {
-      return setupRoutes()
-    })
+    beforeEach(setupRoutes)
 
     it('should generate swagger', () => {
       expect(routerInstance.toSwagger()).toMatchSnapshot()
+    })
+
+    it('includes the components', () => {
+      const swagger = routerInstance.toSwagger()
+      expect(Object.keys(swagger.components.schemas)).toEqual(['itemA', 'itemB'])
     })
   })
 
