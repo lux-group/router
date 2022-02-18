@@ -4,7 +4,32 @@ exports[`router toSwagger should generate swagger 1`] = `
 Object {
   "basePath": "/",
   "components": Object {
-    "schemas": Object {},
+    "schemas": Object {
+      "itemA": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "id": Object {
+            "type": "integer",
+          },
+        },
+        "required": Array [
+          "id",
+        ],
+        "type": "object",
+      },
+      "itemB": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "id": Object {
+            "type": "integer",
+          },
+        },
+        "required": Array [
+          "id",
+        ],
+        "type": "object",
+      },
+    },
   },
   "consumes": Array [
     "application/json",
@@ -103,6 +128,17 @@ Object {
                   "properties": Object {
                     "id": Object {
                       "type": "integer",
+                    },
+                    "item": Object {
+                      "oneOf": Array [
+                        Object {
+                          "$ref": "#/components/schemas/itemA",
+                        },
+                        Object {
+                          "$ref": "#/components/schemas/itemB",
+                        },
+                      ],
+                      "type": "object",
                     },
                   },
                   "required": Array [
