@@ -93,6 +93,7 @@ declare module "@luxuryescapes/router" {
   export interface RouterAbstraction {
     serveSwagger: (path: string) => void;
     app: Express,
+    options: (options: RouteOptions) => void;
     get: (options: RouteOptions) => void;
     post: (options: RouteOptions) => void;
     put: (options: RouteOptions) => void;
@@ -138,7 +139,7 @@ declare module "@luxuryescapes/router" {
       "application/json": T;
     };
   }
-  
+
   type ResBody<
     operations extends Record<string, any>,
     O extends keyof operations,
@@ -160,7 +161,7 @@ declare module "@luxuryescapes/router" {
       jwt: Jwt;
       user?: unknown; // optional because verifyUserSignature only sets jwt
     }
-  
+
   export interface Handler<
     operations extends Record<string, any>,
     O extends keyof operations,
