@@ -16,11 +16,26 @@ const nullOrString = () =>
     }
   })()
 
+const stringOrNull = () =>
+  s.createMatcher({
+    initialize: function () {
+      this.matcher = s.string()
+    },
+    match: function (path, value) {
+      if (value === null && typeof value === 'object') return
+      return this.matcher.match(path, value)
+    },
+    toJSONSchema: function () {
+      return { type: ['string', 'null'] }
+    }
+  })()
+
 describe('generateTypes', () => {
   it('creates definitions for deep options', async () => {
     const rateSchema = s('rate', s.object({
       id: s.uuid(),
       comment: nullOrString(),
+      description: stringOrNull(),
       opt: s.optional(
         s.oneOf([
           s.enum({ values: ['hotel_only', 'hotel_package'], type: 'string' }),
@@ -72,6 +87,7 @@ export interface components {
       /** Format: uuid */
       id: string;
       comment: null | string;
+      description: null | string;
       opt?:
         | ("hotel_only" | "hotel_package")
         | ("hotel_only" | "hotel_package")[];
