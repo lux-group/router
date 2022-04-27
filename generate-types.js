@@ -49,7 +49,7 @@ async function generate () {
     console.log('Types have changed since the last commit.')
     console.log(stdout)
 
-    if (isCI) return
+    if (isCI) return true
 
     const contractDirectoryPath = contractPath.substring(0, contractPath.lastIndexOf('/'))
 
@@ -62,13 +62,16 @@ async function generate () {
     console.log('No changes.')
   }
 
-  return !!pendingCommits
+  return pendingCommits
 }
 
 generate()
   .then((pendingCommits) => {
-    const exitCode = isCI && pendingCommits ? 1 : 0
-    process.exit(exitCode)
+    if (pendingCommits && isCI) {
+      console.error('Types have changed since the last commit. Please regenerate your types and commit the changes')
+      process.exit(1)
+    }
+    process.exit(0)
   })
   .catch((e) => {
     console.error(e)
