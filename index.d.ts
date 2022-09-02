@@ -82,7 +82,7 @@ declare module "@luxuryescapes/router" {
     summary?: string;
     description?: string;
     warnOnRequestValidationError?: boolean;
-    jsonOptions?: { [option: string]: string };
+    jsonOptions?: { [option: string]: string | number | boolean };
   }
 
   interface SchemaRouteOptions {
