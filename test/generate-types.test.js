@@ -30,12 +30,41 @@ const stringOrNull = () =>
     }
   })()
 
+const salesforceId = () =>
+  s.createMatcher({
+    match: (path, id) => {
+      if (id)
+        return 'should be a 18 digit salesforce id';
+    },
+    toJSONSchema: () => {
+      return {
+        type: 'string',
+        format: 'salesforceId',
+      };
+    },
+  })();
+
+const nullableDateObj = () =>
+  s.createMatcher({
+    match: (path, obj) => {
+      if (!(obj === null || obj instanceof Date))
+        return 'should be a js date object or null';
+    },
+    toJSONSchema: () => {
+      return {
+        format: 'dateObjectOrNull',
+      };
+    },
+  })();
+
 describe('generateTypes', () => {
   it('creates definitions for deep options', async () => {
     const rateSchema = s('rate', s.object({
       id: s.uuid(),
+      sf_id: salesforceId(),
       comment: nullOrString(),
       description: stringOrNull(),
+      checkInDate: nullableDateObj(),
       opt: s.optional(
         s.oneOf([
           s.enum({ values: ['hotel_only', 'hotel_package'], type: 'string' }),
@@ -86,8 +115,12 @@ export interface components {
     rate: {
       /** Format: uuid */
       id: string;
+      /** Format: salesforceId */
+      sf_id: string;
       comment: null | string;
       description: null | string;
+      /** Format: dateObjectOrNull */
+      checkInDate: Date | null;
       opt?:
         | ("hotel_only" | "hotel_package")
         | ("hotel_only" | "hotel_package")[];
