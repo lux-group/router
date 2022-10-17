@@ -33,29 +33,29 @@ const stringOrNull = () =>
 const salesforceId = () =>
   s.createMatcher({
     match: (path, id) => {
-      if (id)
-        return 'should be a 18 digit salesforce id';
+      if (id) return 'should be a salesforce id'
     },
     toJSONSchema: () => {
       return {
         type: 'string',
-        format: 'salesforceId',
-      };
-    },
-  })();
+        format: 'salesforceId'
+      }
+    }
+  })()
 
 const nullableDateObj = () =>
   s.createMatcher({
     match: (path, obj) => {
-      if (!(obj === null || obj instanceof Date))
-        return 'should be a js date object or null';
+      if (!(obj === null || obj instanceof Date)) {
+        return 'should be a js date object or null'
+      }
     },
     toJSONSchema: () => {
       return {
-        format: 'dateObjectOrNull',
-      };
-    },
-  })();
+        format: 'dateObjectOrNull'
+      }
+    }
+  })()
 
 describe('generateTypes', () => {
   it('creates definitions for deep options', async () => {
