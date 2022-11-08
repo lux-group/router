@@ -155,7 +155,8 @@ declare module "@luxuryescapes/router" {
     iss: string,
     exp: number,
     sut: boolean,
-    roles: string[]
+    roles: string[],
+    aud?: string
   }
 
   interface AuthenticatedRequest<P = ParamsDictionary, ResBody = any, ReqBody = any, ReqQuery = ParsedQs>
