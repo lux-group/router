@@ -68,6 +68,7 @@ const routerInstance = router(server, {
   swaggerBaseProperties, // the base properties to include in the swagger definition
   sentryDSN: 'FIND_ME_IN_SENTRY', // optional, provide if you want to auto-report unhandled exceptions to Sentry
   appEnv: process.ENV.APP_ENV, // optional, used to specify the env in Sentry, defaults to "unknown"
+  logger: logger, // pass in the luxuryescapes logger and the error handler will use this, resulting in single line log messages in new relic with stack traces.
 })
 
 // define routes
