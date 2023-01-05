@@ -1,8 +1,9 @@
 const express = require('express')
 const s = require('@luxuryescapes/strummer')
 const request = require('supertest')
+const createErrorHandler = require('../../lib/middleware/error-handler')
 
-const { router, errorHandler, errors } = require('../../index')
+const { router, errors } = require('../../index')
 const uuid = require('../../lib/utils/uuid')
 
 const swaggerBaseProperties = {
@@ -115,6 +116,7 @@ describe('router', () => {
       handlers: [echoHandler]
     })
     routerInstance.serveSwagger('/docs')
+    const errorHandler = createErrorHandler(opts)
     server.use(errorHandler)
     return new Promise((resolve) => {
       app = server.listen(resolve)
