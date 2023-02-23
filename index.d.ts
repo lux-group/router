@@ -35,6 +35,7 @@ declare module "@luxuryescapes/router" {
     validateResponses?: boolean;
     logRequests?: boolean;
     logResponses?: boolean;
+    logMemoryUsage?: boolean;
     correlationIdExtractor?: (req: ExpressRequest, res: Response) => string;
     logger?: Logger;
     sentryDSN?: string;
