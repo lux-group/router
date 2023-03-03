@@ -60,6 +60,7 @@ declare module "@luxuryescapes/router" {
       definitions: object;
       preHandlers?: ExpressHandler[];
     };
+    sanitizeKeys?: Array<string | RegExp>;
   }
 
   interface RouteSchema {

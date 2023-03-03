@@ -69,6 +69,7 @@ const routerInstance = router(server, {
   sentryDSN: 'FIND_ME_IN_SENTRY', // optional, provide if you want to auto-report unhandled exceptions to Sentry
   appEnv: process.ENV.APP_ENV, // optional, used to specify the env in Sentry, defaults to "unknown"
   logger: logger, // pass in the luxuryescapes logger and the error handler will use this, resulting in single line log messages in new relic with stack traces.
+  sanitizeKeys: [/_token$/, /password/i, "someHideousKey", "path.with.dot"], // array of keys or paths to sanitize from the request body, query and params on error
 })
 
 // define routes
@@ -100,7 +101,7 @@ routerInstance.put({
   summary: 'This route is about something', // for swagger
   description: 'This route does something', // for swagger
   validateResponses: false, //  false response body will not be validated against schema, true = response body validated against schema DEFAULT: false
-  warnOnRequestValidationError: false // false = throw error, true = log warning DEFAULT: false
+  warnOnRequestValidationError: false, // false = throw error, true = log warning DEFAULT: false
   logRequests: true, // true = request and response will be logged DEFAULT: false,
   correlationIdExtractor: (req, res) => { return req.params.id }, // for use when logRequests is TRUE, this will be used to extract the correlationid from the request/response for use in the log output DEFAULT: null
   logger: new Bunyan(), // you can pass in a logger that will be used for logging output , must have methods `log`, `warn` and `error` DEFAULT: console
