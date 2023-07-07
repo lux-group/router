@@ -294,7 +294,7 @@ describe('router', () => {
           ]
         })
         expect(response.body.stack).toMatch(`Error: Invalid url query parameters
-    at new InvalidRequestError`);
+    at new InvalidRequestError`)
       })
 
       it('should error if params are invalid', async () => {
@@ -319,7 +319,7 @@ describe('router', () => {
           ]
         }))
         expect(response.body.stack).toMatch(`Error: Invalid url path parameters
-    at new InvalidRequestError`);
+    at new InvalidRequestError`)
       })
 
       it('should error if payload is invalid', async () => {
@@ -344,7 +344,7 @@ describe('router', () => {
           ]
         }))
         expect(response.body.stack).toMatch(`Error: Invalid payload
-    at new InvalidRequestError`);
+    at new InvalidRequestError`)
       })
     })
 
@@ -563,7 +563,7 @@ describe('router', () => {
         ]
       }))
       expect(response.body.stack).toMatch(`Error: Unprocessable yo
-    at new UnprocessableEntityError`);
+    at new UnprocessableEntityError`)
     })
 
     it('should coerce unknown errors to a 500', async () => {
@@ -579,12 +579,10 @@ describe('router', () => {
         status: 500,
         message: 'Unknown error',
         errors: ['Unknown error']
-      }));
+      }))
 
       expect(response.body.stack).toMatch(`Error: Unknown error
-    at new ServerError`);
-
-    
+    at new ServerError`)
     })
   })
 })
