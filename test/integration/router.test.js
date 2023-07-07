@@ -285,6 +285,7 @@ describe('router', () => {
         expect(response.body).toEqual({
           status: 400,
           message: 'Invalid url query parameters',
+          stack: expect.any(String),
           errors: [
             {
               path: 'hello',
@@ -292,6 +293,8 @@ describe('router', () => {
             }
           ]
         })
+        expect(response.body.stack).toMatch(`Error: Invalid url query parameters
+    at new InvalidRequestError`);
       })
 
       it('should error if params are invalid', async () => {
@@ -303,9 +306,10 @@ describe('router', () => {
           })
 
         expect(response.status).toEqual(400)
-        expect(response.body).toEqual({
+        expect(response.body).toEqual(expect.objectContaining({
           status: 400,
           message: 'Invalid url path parameters',
+          stack: expect.any(String),
           errors: [
             {
               path: 'id',
@@ -313,7 +317,9 @@ describe('router', () => {
               value: 'myid123'
             }
           ]
-        })
+        }))
+        expect(response.body.stack).toMatch(`Error: Invalid url path parameters
+    at new InvalidRequestError`);
       })
 
       it('should error if payload is invalid', async () => {
@@ -325,9 +331,10 @@ describe('router', () => {
           })
 
         expect(response.status).toEqual(400)
-        expect(response.body).toEqual({
+        expect(response.body).toEqual(expect.objectContaining({
           status: 400,
           message: 'Invalid payload',
+          stack: expect.any(String),
           errors: [
             {
               path: 'action',
@@ -335,7 +342,9 @@ describe('router', () => {
               value: 'delete'
             }
           ]
-        })
+        }))
+        expect(response.body.stack).toMatch(`Error: Invalid payload
+    at new InvalidRequestError`);
       })
     })
 
@@ -418,6 +427,7 @@ describe('router', () => {
         expect(response.body).toEqual({
           status: 500,
           message: 'Response body does not match the specified schema',
+          stack: expect.any(String),
           errors: [
             {
               path: 'extraField',
@@ -541,16 +551,19 @@ describe('router', () => {
         })
 
       expect(response.status).toEqual(422)
-      expect(response.body).toEqual({
+      expect(response.body).toEqual(expect.objectContaining({
         status: 422,
         message: 'Unprocessable yo',
+        stack: expect.any(String),
         errors: [
           {
             path: 'something',
             message: 'hahahehe'
           }
         ]
-      })
+      }))
+      expect(response.body.stack).toMatch(`Error: Unprocessable yo
+    at new UnprocessableEntityError`);
     })
 
     it('should coerce unknown errors to a 500', async () => {
@@ -562,11 +575,16 @@ describe('router', () => {
         })
 
       expect(response.status).toEqual(500)
-      expect(response.body).toEqual({
+      expect(response.body).toEqual(expect.objectContaining({
         status: 500,
         message: 'Unknown error',
         errors: ['Unknown error']
-      })
+      }));
+
+      expect(response.body.stack).toMatch(`Error: Unknown error
+    at new ServerError`);
+
+    
     })
   })
 })
