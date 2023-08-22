@@ -104,6 +104,7 @@ declare module "@luxuryescapes/router" {
     warnOnRequestValidationError?: boolean;
     /**
      * Options to be passed to `express.json()`
+     * @see https://expressjs.com/en/4x/api.html#express.json
      * @defaultValue `{}`
      */
     jsonOptions?: { [option: string]: string | number | boolean | null | undefined };
