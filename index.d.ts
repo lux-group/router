@@ -73,16 +73,39 @@ declare module "@luxuryescapes/router" {
   }
 
   interface RouteOptions {
+    /**
+     * Path for the route
+     * @see https://expressjs.com/en/4x/api.html#path-examples
+     */
     url: string;
+    /** The route will be referenced by this ID in the contract */
     operationId?: string;
+    /** Request and response schemas. The endpoint will use these to validate incoming requests and outgoing responses. */
     schema?: RouteSchema;
+    /**
+     * If `false`, the Swagger docs will specify that a cookie containing an access token is required.
+     * @defaultValue `false`
+     */
     isPublic?: boolean;
+    /** Pre-handlers are run before request validation. Usually used for authentication. */
     preHandlers?: ExpressHandler[];
+    /** Handlers are run after request validation. */
     handlers: ((req: any, res: Response, next: NextFunction) => void)[]
+    /** For Swagger docs */
     tags?: string[];
+    /** For Swagger docs */
     summary?: string;
+    /** For Swagger docs */
     description?: string;
+    /**
+     * If `true`, logs a warning on request validation error.
+     * @defaultValue `false`
+     */
     warnOnRequestValidationError?: boolean;
+    /**
+     * Options to be passed to `express.json()`
+     * @defaultValue `{}`
+     */
     jsonOptions?: { [option: string]: string | number | boolean | null | undefined };
   }
 
