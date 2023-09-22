@@ -23,7 +23,7 @@ declare module "@luxuryescapes/router" {
     error: Function;
   }
 
-  export type AppEnv = 'development' | 'spec' | 'test' | 'production';
+  export type AppEnv = 'dev' | 'development' | 'spec' | 'test'  | 'staging' | 'production';
 
   interface SentryConfig {
     appEnv: AppEnv;
