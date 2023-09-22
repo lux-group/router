@@ -174,7 +174,7 @@ const { initializeSentry } = require('@luxuryescapes/router')
 import * as Sentry from "@sentry/node";
 
 initializeSentry({
-  appEnv: 'test',
+  appEnv: 'staging',
   sentryDSN: 'FIND_ME_IN_SENTRY'
 })
 
