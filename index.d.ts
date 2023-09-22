@@ -23,7 +23,15 @@ declare module "@luxuryescapes/router" {
     error: Function;
   }
 
-  export type AppEnv = 'development' | 'spec' | 'test' | 'production';
+  /**
+   * New AWS environment has 3 environments:
+   * - dev
+   * - staging
+   * - prod
+   *
+   * 'development' can be used for local development, 'spec' for unit tests and 'test' and 'production' are being deprecated.
+   */
+  export type AppEnv = 'dev' | 'development' | 'spec' | 'test'  | 'staging' | 'prod' | 'production';
 
   interface SentryConfig {
     appEnv: AppEnv;
