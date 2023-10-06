@@ -39,7 +39,7 @@
     "express": "^4.17.1"
   },
   "dependencies": {
-    "@luxuryescapes/strummer": "^2.11.3",
+    "@luxuryescapes/strummer": "^3.5.2",
     "@sentry/node": "^6.17.4",
     "lodash.omit": "^4.5.0",
     "openapi-typescript": "^4.4.0",
