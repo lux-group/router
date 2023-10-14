@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "@luxuryescapes/strummer": "^2.11.3",
-    "@sentry/node": "^6.17.4",
+    "@sentry/node": "^7.74.0",
     "lodash.omit": "^4.5.0",
     "openapi-typescript": "^4.4.0",
     "swagger-ui-express": "^4.5.0"
