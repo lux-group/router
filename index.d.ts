@@ -143,9 +143,10 @@ declare module "@luxuryescapes/router" {
   export function initializeSentry(config: SentryConfig): boolean;
 
   interface HTTPError extends Error {
-    new (code: number, message: string, errors?: (string | object)[]) : HTTPError
+    new (code: number, message: string, errors?: (string | object)[], refCode?: string) : HTTPError
     code: number
     errors: (string | object)[]
+    refCode: string
     responseJson: object
   }
 
