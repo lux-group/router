@@ -85,19 +85,27 @@ describe('generateSwagger', () => {
       }
     })
 
-    expect(swagger.components.securitySchemes).toEqual({
-      bearerAuth: {
-        type: 'http',
-        name: 'Authorization',
-        in: 'header',
-        scheme: 'bearer',
-        bearerFormat: 'JWT'
+    expect(swagger.components.securitySchemes).toEqual(
+      {
+        bearerAuth: {
+          type: 'http',
+          name: 'Authorization',
+          in: 'header',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
+        },
+        cookieBased: {
+          type: 'http',
+          name: 'Cookie',
+          in: 'header',
+          description: 'Cookie'
+        }
       }
-    })
+    )
 
     expect(swagger.security).toEqual([{
       bearerAuth: []
-    }])
+    }, { cookieBased: [] }])
   })
 
   it('should prefer customized security definitions if one is provided', () => {

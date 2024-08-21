@@ -169,6 +169,9 @@ Object {
     Object {
       "bearerAuth": Array [],
     },
+    Object {
+      "cookieBased": Array [],
+    },
   ],
   "securityDefinitions": Object {},
   "tags": Array [
