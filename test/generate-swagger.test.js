@@ -98,7 +98,8 @@ describe('generateSwagger', () => {
           type: 'http',
           name: 'Cookie',
           in: 'header',
-          description: 'Cookie'
+          description: 'Cookie',
+          scheme: 'basic'
         }
       }
     )
