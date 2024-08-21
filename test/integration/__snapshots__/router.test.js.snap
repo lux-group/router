@@ -30,6 +30,7 @@ Object {
         "type": "object",
       },
     },
+    "securitySchemes": Object {},
   },
   "consumes": Array [
     "application/json",
@@ -163,6 +164,14 @@ Object {
   ],
   "schemes": Array [
     "https",
+  ],
+  "security": Array [
+    Object {
+      "bearerAuth": Array [],
+    },
+    Object {
+      "cookieBased": Array [],
+    },
   ],
   "securityDefinitions": Object {},
   "tags": Array [

@@ -64,7 +64,8 @@ declare module "@luxuryescapes/router" {
       produces: string[];
       schemes: string[];
       paths: object;
-      securityDefinitions: object;
+      securityDefinitions?: object;
+      security?: object[];
       definitions: object;
       preHandlers?: ExpressHandler[];
     };
