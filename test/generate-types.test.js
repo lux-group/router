@@ -133,7 +133,12 @@ export interface components {
 
 export interface operations {
   "//get": {
-    parameters: {};
+    parameters: {
+      header: {
+        /** Cookie */
+        Cookie: string;
+      };
+    };
     responses: {
       /** 200 response */
       200: {
