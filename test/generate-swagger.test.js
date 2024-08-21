@@ -84,6 +84,20 @@ describe('generateSwagger', () => {
         type: 'object'
       }
     })
+
+    expect(swagger.components.securitySchemes).toEqual({
+      bearerAuth: {
+        type: 'http',
+        name: 'Authorization',
+        in: 'header',
+        scheme: 'bearer',
+        bearerFormat: 'JWT'
+      }
+    })
+
+    expect(swagger.security).toEqual([{
+      bearerAuth: []
+    }])
   })
 
   it('does not create definitions for unnamed hashmaps', () => {
