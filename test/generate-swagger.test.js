@@ -95,7 +95,7 @@ describe('generateSwagger', () => {
           bearerFormat: 'JWT'
         },
         cookieBased: {
-          type: 'apikey',
+          type: 'apiKey',
           name: 'Cookie',
           in: 'header',
           description: 'Cookie'
