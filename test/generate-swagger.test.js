@@ -100,6 +100,66 @@ describe('generateSwagger', () => {
     }])
   })
 
+  it('should prefer customized security definitions if one is provided', () => {
+    const response = s.object({
+      packages: s.hashmap(packageSchema)
+    })
+    const updatedBaseProperties = {
+      ...baseProperties,
+      securityDefinitions: {
+        type: 'custom-type'
+      },
+      security: [{ somekey: 'some-security' }]
+    }
+    const swagger = generateSwagger(buildRouteDefinitions({ response }), updatedBaseProperties)
+
+    expect(swagger.paths['/']['get']['responses']['200']['content']['application/json']['schema']).toEqual({
+      properties: {
+        packages: {
+          additionalProperties: { $ref: '#/components/schemas/package' },
+          type: 'object'
+        }
+      },
+      required: [
+        'packages'
+      ],
+      type: 'object'
+    })
+
+    expect(swagger.components.schemas).toEqual({
+      package: {
+        properties: {
+          id: {
+            format: 'uuid',
+            type: 'string'
+          },
+          rates: {
+            items: { $ref: '#/components/schemas/rate' },
+            type: 'array'
+          }
+        },
+        required: ['id', 'rates'],
+        type: 'object'
+      },
+      rate: {
+        properties: {
+          id: {
+            format: 'uuid',
+            type: 'string'
+          }
+        },
+        required: ['id'],
+        type: 'object'
+      }
+    })
+
+    expect(swagger.components.securitySchemes).toEqual({
+      type: 'custom-type'
+    })
+
+    expect(swagger.security).toEqual([{ somekey: 'some-security' }])
+  })
+
   it('does not create definitions for unnamed hashmaps', () => {
     const response = s.objectWithOnly({
       packages: s.hashmap(unnamedSchema)

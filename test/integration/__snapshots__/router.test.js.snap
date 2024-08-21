@@ -30,15 +30,7 @@ Object {
         "type": "object",
       },
     },
-    "securitySchemes": Object {
-      "bearerAuth": Object {
-        "bearerFormat": "JWT",
-        "in": "header",
-        "name": "Authorization",
-        "scheme": "bearer",
-        "type": "http",
-      },
-    },
+    "securitySchemes": Object {},
   },
   "consumes": Array [
     "application/json",
