@@ -99,7 +99,7 @@ describe('generateSwagger', () => {
           name: 'Cookie',
           in: 'header',
           description: 'Cookie',
-          scheme: 'PrivateToken'
+          scheme: 'token'
         }
       }
     )
