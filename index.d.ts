@@ -105,6 +105,8 @@ declare module "@luxuryescapes/router" {
     summary?: string;
     /** For Swagger docs */
     description?: string;
+    /** For Swagger docs */
+    deprecated?: boolean;
     /**
      * If `true`, logs a warning on request validation error.
      * @defaultValue `false`

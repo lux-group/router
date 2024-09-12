@@ -109,6 +109,7 @@ describe('router', () => {
       tags: ['Something'],
       summary: 'This route is about something',
       description: 'This route does something',
+      deprecated: false,
       ...routeOpts
     })
     routerInstance.post({

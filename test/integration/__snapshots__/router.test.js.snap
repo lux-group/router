@@ -52,6 +52,7 @@ Object {
   "paths": Object {
     "/api/something/{id}": Object {
       "put": Object {
+        "deprecated": false,
         "description": "This route does something",
         "operationId": "/api/something/{id}/put",
         "parameters": Array [
