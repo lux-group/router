@@ -99,6 +99,7 @@ routerInstance.put({
   isPublic: true,
   tags: ['Something'], // for swagger
   summary: 'This route is about something', // for swagger
+  deprecated: false, // for swagger; if true, the route will be marked as deprecated
   description: 'This route does something', // for swagger
   validateResponses: false, //  false response body will not be validated against schema, true = response body validated against schema DEFAULT: false
   warnOnRequestValidationError: false, // false = throw error, true = log warning DEFAULT: false
