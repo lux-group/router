@@ -95,6 +95,8 @@ declare module "@luxuryescapes/router" {
      * @defaultValue `false`
      */
     isPublic?: boolean;
+    /** To simulate the user object created by lib-auth-middleware */
+    includeUserObject?: boolean;
     /** Pre-handlers are run before request validation. Usually used for authentication. */
     preHandlers?: ExpressHandler[];
     /** Handlers are run after request validation. */

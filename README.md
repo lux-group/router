@@ -97,6 +97,7 @@ routerInstance.put({
     })
   }],
   isPublic: true,
+  includeUserObject: false,
   tags: ['Something'], // for swagger
   summary: 'This route is about something', // for swagger
   deprecated: false, // for swagger; if true, the route will be marked as deprecated

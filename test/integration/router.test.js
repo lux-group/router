@@ -112,6 +112,18 @@ describe('router', () => {
       deprecated: false,
       ...routeOpts
     })
+    routerInstance.put({
+      url: '/api/something/secure/:id',
+      schema,
+      handlers: [handler || genericHandler],
+      isPublic: false,
+      includeUserObject: true,
+      tags: ['Something'],
+      summary: 'This route is about something',
+      description: 'This route does something',
+      deprecated: false,
+      ...routeOpts
+    })
     routerInstance.post({
       url: '/api/echo',
       handlers: [echoHandler]
@@ -567,6 +579,26 @@ describe('router', () => {
         status: 500,
         message: 'Unknown error',
         errors: ['Unknown error']
+      })
+    })
+  })
+
+  describe('includeUserObject', () => {
+    describe('when enabled', () => {
+      beforeEach(async () => {
+        return setupRoutes()
+      })
+
+      it('should return if request is valid', async () => {
+        const response = await request(app)
+          .put('/api/something/secure/123')
+          .query({ hello: 'hi', world: 'yes' })
+          .send({
+            action: 'create'
+          })
+
+        expect(response.status).toEqual(201)
+        expect(response.body).toEqual({ id: 123 })
       })
     })
   })
