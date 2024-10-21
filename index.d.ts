@@ -198,7 +198,9 @@ declare module "@luxuryescapes/router" {
   interface AuthenticatedRequest<P = ParamsDictionary, ResBody = any, ReqBody = any, ReqQuery = ParsedQs>
     extends ExpressRequest<P, ResBody, ReqBody, ReqQuery> {
       jwt: Jwt;
-      user?: unknown; // optional because verifyUserSignature only sets jwt
+      user: { // verifyUserSignature only sets jwt, but most cases we check verifyUser which sets the user.
+        id_member: string
+      }
     }
 
   export interface Handler<
