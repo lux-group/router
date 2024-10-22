@@ -200,6 +200,7 @@ declare module "@luxuryescapes/router" {
       jwt: Jwt;
       user: { // verifyUserSignature only sets jwt, but most auth checks use verifyUser which sets the user object as well.
         id_member: string
+        roles: string[]
       }
     }
 
