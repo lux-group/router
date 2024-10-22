@@ -39,6 +39,7 @@
     "express": "^4.17.1"
   },
   "dependencies": {
+    "@luxuryescapes/lib-types": "^1.16.15",
     "@luxuryescapes/strummer": "^2.11.3",
     "@sentry/node": "^6.17.4",
     "lodash.omit": "^4.5.0",
@@ -62,5 +63,6 @@
   },
   "engines": {
     "node": ">=14.17.0"
-  }
+  },
+  "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
 }
