@@ -3,6 +3,7 @@ declare module "@luxuryescapes/router" {
   import { Matcher } from "@luxuryescapes/strummer"
   import { ParamsDictionary, RequestHandler as ExpressHandler } from 'express-serve-static-core';
   import { ParsedQs } from "qs";
+  import { API } from "@luxuryescapes/lib-types";
 
   export function errorHandler(
     err: Error,
@@ -198,7 +199,10 @@ declare module "@luxuryescapes/router" {
   interface AuthenticatedRequest<P = ParamsDictionary, ResBody = any, ReqBody = any, ReqQuery = ParsedQs>
     extends ExpressRequest<P, ResBody, ReqBody, ReqQuery> {
       jwt: Jwt;
-      user?: unknown; // optional because verifyUserSignature only sets jwt
+      user: { // verifyUserSignature only sets jwt, but most auth checks use verifyUser which sets the user object as well.
+        id_member: API.Auth.User['id_member']
+        roles: API.Auth.User['roles']
+      }
     }
 
   export interface Handler<

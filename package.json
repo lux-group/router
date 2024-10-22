@@ -1,6 +1,6 @@
 {
   "name": "@luxuryescapes/router",
-  "version": "2.5.31",
+  "version": "2.5.32",
   "description": "Wrapper around express router that provides validation and documentation out of the box",
   "main": "index.js",
   "types": "index.d.ts",
@@ -39,6 +39,7 @@
     "express": "^4.17.1"
   },
   "dependencies": {
+    "@luxuryescapes/lib-types": "^1.16.15",
     "@luxuryescapes/strummer": "^2.11.3",
     "@sentry/node": "^6.17.4",
     "lodash.omit": "^4.5.0",
