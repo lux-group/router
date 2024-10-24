@@ -119,6 +119,12 @@ declare module "@luxuryescapes/router" {
      * @defaultValue `{}`
      */
     jsonOptions?: { [option: string]: string | number | boolean | null | undefined };
+    
+    /**
+     * Cache-Control header value
+     * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
+     */
+    cacheControlString?: string;
   }
 
   interface SchemaRouteOptions {
