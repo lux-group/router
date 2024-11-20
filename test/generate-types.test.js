@@ -143,7 +143,7 @@ export interface operations {
       /** 200 response */
       200: {
         content: {
-          "application/json": definitions["rate"];
+          "application/json": components["schemas"]["rate"];
         };
       };
     };
