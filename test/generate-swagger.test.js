@@ -299,7 +299,7 @@ describe('generateSwagger', () => {
     })
 
     expect(swagger.paths['/']['get']['responses']['200']['content']['application/json']).toEqual({
-      'schema': { '$ref': '#/definitions/rate' }
+      'schema': { '$ref': '#/components/schemas/rate' }
     })
   })
 
