@@ -214,7 +214,7 @@ declare module "@luxuryescapes/router" {
       ? parameters["path"]
       : {},
     ReqBody = parameters extends { body: { [k: string]: any } }
-      ? parameters["body"][string]
+      ? parameters["body"][keyof parameters["body"]]
       : {},
     Query = parameters extends { query: any }
       ? parameters["query"]
